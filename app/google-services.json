@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "870878529434",
+    "project_id": "tenisclubdroid",
+    "storage_bucket": "tenisclubdroid.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:870878529434:android:72ba10df16d15e1b22dc23",
+        "android_client_info": {
+          "package_name": "com.example.tenisclubdroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "870878529434-moi22k960dm0v0jdl02a0hsl3efkoc6h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4QH7VvPp_5VWo5oYBINez99JY0Hk8VU4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "870878529434-moi22k960dm0v0jdl02a0hsl3efkoc6h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

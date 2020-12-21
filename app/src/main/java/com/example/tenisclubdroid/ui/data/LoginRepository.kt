@@ -1,6 +1,6 @@
-package com.example.tenisclubdroid.ui.login.data
+package com.example.tenisclubdroid.ui.data
 
-import com.example.tenisclubdroid.ui.login.data.model.LoggedInUser
+import com.example.tenisclubdroid.ui.data.model.LoggedInUser
 
 /**
  * Class that requests authentication and user information from the remote data source and

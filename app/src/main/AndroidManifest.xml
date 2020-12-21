@@ -10,7 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TenisClubDroid">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.borrame"
+            android:label="@string/title_activity_borrame"
+            android:theme="@style/Theme.TenisClubDroid.NoActionBar"></activity>
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login"
+            android:theme="@style/Theme.TenisClubDroid.NoActionBar" />
+        <activity
+            android:name=".SplashScreen"
             android:label="@string/app_name"
             android:theme="@style/Theme.TenisClubDroid.NoActionBar">
             <intent-filter>
@@ -19,6 +27,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:usesCleartextTraffic="true" />
     </application>
 
 </manifest>

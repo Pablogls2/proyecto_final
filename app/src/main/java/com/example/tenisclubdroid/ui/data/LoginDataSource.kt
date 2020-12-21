@@ -1,6 +1,6 @@
-package com.example.tenisclubdroid.ui.login.data
+package com.example.tenisclubdroid.ui.data
 
-import com.example.tenisclubdroid.ui.login.data.model.LoggedInUser
+import com.example.tenisclubdroid.ui.data.model.LoggedInUser
 import java.io.IOException
 
 /**

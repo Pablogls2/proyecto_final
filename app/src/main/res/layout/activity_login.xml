@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:backgroundTint="@color/background"
+    tools:context=".LoginActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
+        android:foregroundTint="#020EAA">
+
+        <Button
+            android:id="@+id/btnLoginNuevaContra2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/background"
+            android:fontFamily="sans-serif"
+            android:text="¿Aun no tienes cuenta?"
+            android:textColor="@color/gris"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.446"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.623" />
+
+        <EditText
+            android:id="@+id/etpLoginContra"
+            android:layout_width="210dp"
+            android:layout_height="60dp"
+            android:backgroundTint="#0347F4"
+            android:ems="10"
+            android:foregroundTint="#020EAA"
+            android:hint="Contraseña"
+            android:inputType="textPassword"
+            android:shadowColor="#071E91"
+            android:textColor="@color/blanco"
+            android:textColorHighlight="#071E91"
+            android:textColorHint="#FFFFFF"
+            android:textColorLink="#071E91"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.433" />
+
+        <EditText
+            android:id="@+id/etLoginUsu"
+            android:layout_width="210dp"
+            android:layout_height="55dp"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="#0347F4"
+            android:ems="10"
+            android:fontFamily="sans-serif"
+            android:foregroundTint="#020EAA"
+            android:hint="Usuario"
+            android:inputType="textPersonName"
+            android:shadowColor="#071E91"
+            android:textColor="@color/logo_background"
+            android:textColorHighlight="#071E91"
+            android:textColorHint="#FFFFFF"
+            android:textColorLink="#071E91"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.54"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.319" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="211dp"
+            android:layout_height="205dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.003"
+            app:srcCompat="@mipmap/logo_foreground" />
+
+        <Button
+            android:id="@+id/btnLoginNuevaContra"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/background"
+            android:fontFamily="sans-serif"
+            android:text="Olvide mi contraseña"
+            android:textColor="@color/gris"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.446"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.534" />
+
+        <Button
+            android:id="@+id/btnLoginEntrar"
+            android:layout_width="198dp"
+            android:layout_height="50dp"
+            android:background="@color/dorado"
+            android:backgroundTint="@color/dorado"
+            android:text="Entrar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.719" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

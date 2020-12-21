@@ -1,4 +1,4 @@
-package com.example.tenisclubdroid.ui.login.data
+package com.example.tenisclubdroid.ui.data
 
 /**
  * A generic class that holds a value with its loading status.

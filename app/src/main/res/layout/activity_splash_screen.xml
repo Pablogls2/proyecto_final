@@ -4,14 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
+    android:backgroundTint="@color/background"
     tools:context=".SplashScreen">
 
     <TextView
         android:id="@+id/tvSplashImagen"
         style="@android:style/Widget.Holo.TextView"
-        android:layout_width="335dp"
-        android:layout_height="339dp"
-        android:background="@mipmap/ic_launcher"
+        android:layout_width="365dp"
+        android:layout_height="404dp"
+        android:background="@mipmap/logo_foreground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -16,11 +16,27 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="0dp"
-        android:foregroundTint="#020EAA">
+        android:foregroundTint="#020EAA"
+        tools:layout_editor_absoluteX="-115dp"
+        tools:layout_editor_absoluteY="97dp">
+
+        <Button
+            android:id="@+id/btnLoginGoogle"
+            android:layout_width="198dp"
+            android:layout_height="50dp"
+            android:background="@color/rojo_google"
+            android:backgroundTint="@color/rojo_google"
+            android:text="Entrar con Google"
+            android:textAllCaps="false"
+            android:textColor="@color/blanco"
+            app:icon="@drawable/googleg_standard_color_18"
+            app:iconTint="@color/blanco"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.814" />
 
         <Button
             android:id="@+id/btnLoginNuevaContra2"
@@ -29,6 +45,7 @@
             android:backgroundTint="@color/background"
             android:fontFamily="sans-serif"
             android:text="¿Aun no tienes cuenta?"
+            android:textAllCaps="false"
             android:textColor="@color/gris"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -68,9 +85,10 @@
             android:ems="10"
             android:fontFamily="sans-serif"
             android:foregroundTint="#020EAA"
-            android:hint="Usuario"
+            android:hint="Email"
             android:inputType="textPersonName"
             android:shadowColor="#071E91"
+            android:textAllCaps="false"
             android:textColor="@color/logo_background"
             android:textColorHighlight="#071E91"
             android:textColorHint="#FFFFFF"
@@ -101,6 +119,7 @@
             android:backgroundTint="@color/background"
             android:fontFamily="sans-serif"
             android:text="Olvide mi contraseña"
+            android:textAllCaps="false"
             android:textColor="@color/gris"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -122,6 +141,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.719" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

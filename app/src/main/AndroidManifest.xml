@@ -3,16 +3,13 @@
     package="com.example.tenisclubdroid">
 
     <application
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TenisClubDroid">
-        <activity
-            android:name=".ui.borrame"
-            android:label="@string/title_activity_borrame"
-            android:theme="@style/Theme.TenisClubDroid.NoActionBar"></activity>
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
@@ -30,6 +27,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
+            android:theme="@style/Theme.TenisClubDroid.NoActionBar"
             android:screenOrientation="portrait"
             android:usesCleartextTraffic="true" />
     </application>

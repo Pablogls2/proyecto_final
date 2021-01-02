@@ -39,7 +39,7 @@
             app:layout_constraintVertical_bias="0.814" />
 
         <Button
-            android:id="@+id/btnLoginNuevaContra2"
+            android:id="@+id/btnLoginRegistro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/background"
@@ -55,7 +55,7 @@
             app:layout_constraintVertical_bias="0.623" />
 
         <EditText
-            android:id="@+id/etpLoginContra"
+            android:id="@+id/etRegistroContra"
             android:layout_width="210dp"
             android:layout_height="60dp"
             android:backgroundTint="#0347F4"
@@ -77,7 +77,7 @@
             app:layout_constraintVertical_bias="0.433" />
 
         <EditText
-            android:id="@+id/etLoginUsu"
+            android:id="@+id/etLoginEmail"
             android:layout_width="210dp"
             android:layout_height="55dp"
             android:layout_marginEnd="16dp"
@@ -129,7 +129,7 @@
             app:layout_constraintVertical_bias="0.534" />
 
         <Button
-            android:id="@+id/btnLoginEntrar"
+            android:id="@+id/btnRegistroRegistrar"
             android:layout_width="198dp"
             android:layout_height="50dp"
             android:background="@color/dorado"

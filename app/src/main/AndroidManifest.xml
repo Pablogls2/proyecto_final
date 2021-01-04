@@ -3,6 +3,7 @@
     package="com.example.tenisclubdroid">
 
     <application
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -10,7 +11,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TenisClubDroid">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.perfil.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:theme="@style/Theme.TenisClubDroid.NoActionBar" />
+        <activity
+            android:name=".SplashScreen"
             android:label="@string/app_name"
             android:theme="@style/Theme.TenisClubDroid.NoActionBar">
             <intent-filter>
@@ -19,6 +24,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.TenisClubDroid.NoActionBar"
+            android:screenOrientation="portrait"
+            android:usesCleartextTraffic="true" />
     </application>
 
 </manifest>

@@ -12,14 +12,34 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.example.tenisclubdroid.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_club"
+        android:name="com.example.tenisclubdroid.ui.club.ClubFragment"
+        android:label="@string/menu_club"
+        tools:layout="@layout/fragment_club" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.tenisclubdroid.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_contactos"
+        android:name="com.example.tenisclubdroid.ui.contactos.ContactosFragment"
+        android:label="@string/menu_contactos"
+        tools:layout="@layout/fragment_contactos" />
+    <fragment
+        android:id="@+id/nav_reservar"
+        android:name="com.example.tenisclubdroid.ui.home.HomeFragment"
+        android:label="@string/menu_reservar"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/nav_historial"
+        android:name="com.example.tenisclubdroid.ui.home.HomeFragment"
+        android:label="@string/menu_historial"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/nav_calendario"
+        android:name="com.example.tenisclubdroid.ui.home.HomeFragment"
+        android:label="@string/menu_calendario"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/nav_perfil"
+        android:name="com.example.tenisclubdroid.ui.perfil.PerfilFragment"
+        android:label="@string/menu_perfil"
+        tools:layout="@layout/fragment_contactos" />
 </navigation>

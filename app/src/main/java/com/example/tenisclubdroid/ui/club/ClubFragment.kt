@@ -1,4 +1,4 @@
-package com.example.tenisclubdroid.ui.gallery
+package com.example.tenisclubdroid.ui.club
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +10,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.tenisclubdroid.R
 
-class GalleryFragment : Fragment() {
+class ClubFragment : Fragment() {
 
-    private lateinit var galleryViewModel: GalleryViewModel
+    private lateinit var clubViewModel: ClubViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        galleryViewModel =
-                ViewModelProvider(this).get(GalleryViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_gallery, container, false)
+        clubViewModel =
+                ViewModelProvider(this).get(ClubViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_club, container, false)
         val textView: TextView = root.findViewById(R.id.text_gallery)
-        galleryViewModel.text.observe(viewLifecycleOwner, Observer {
+        clubViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root

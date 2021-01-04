@@ -4,7 +4,7 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/background</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
@@ -22,4 +22,9 @@
     <style name="Theme.TenisClubDroid.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.TenisClubDroid.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name ="estilodeapp">
+        <item name="android:background">#090C25</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
 </resources>

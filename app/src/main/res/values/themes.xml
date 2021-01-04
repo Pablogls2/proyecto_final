@@ -22,4 +22,9 @@
     <style name="Theme.TenisClubDroid.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.TenisClubDroid.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name ="estilodeapp">
+        <item name="android:background">#090C25</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
 </resources>

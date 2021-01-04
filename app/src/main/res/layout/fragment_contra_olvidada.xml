@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:backgroundTint="@color/background"
+    tools:context=".ui.perfil.ContraOlvidada" >
+
+    <Button
+        android:id="@+id/btnContraOlvidadaEnviar"
+        android:layout_width="198dp"
+        android:layout_height="50dp"
+        android:background="@color/dorado"
+        android:backgroundTint="@color/dorado"
+        android:text="@string/enviar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.549" />
+
+    <EditText
+        android:id="@+id/etContraOlvidadaEmail"
+        android:layout_width="335dp"
+        android:layout_height="47dp"
+        android:backgroundTint="#0347F4"
+        android:ems="10"
+        android:foregroundTint="#020EAA"
+        android:hint="@string/prompt_email"
+        android:inputType="textEmailAddress"
+        android:shadowColor="#071E91"
+        android:textColor="@color/blanco"
+        android:textColorHighlight="#071E91"
+        android:textColorHint="#FFFFFF"
+        android:textColorLink="#071E91"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.391" />
+
+    <TextView
+        android:id="@+id/tvRecordarContra2"
+        android:layout_width="333dp"
+        android:layout_height="102dp"
+        android:text="@string/textoRestablecerContra"
+        android:textColor="@color/blanco"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.346"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.243" />
+
+    <ImageView
+        android:id="@+id/ivRegistroAtras2"
+        android:layout_width="75dp"
+        android:layout_height="45dp"
+        android:src="@drawable/ic_backarrow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.004" />
+
+    <TextView
+        android:id="@+id/tvRecordarContra"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Recordar"
+        android:textColor="@color/blanco"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.144"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.144" />
+</androidx.constraintlayout.widget.ConstraintLayout>

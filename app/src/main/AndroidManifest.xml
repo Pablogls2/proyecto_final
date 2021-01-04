@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TenisClubDroid">
         <activity
-            android:name=".LoginActivity"
+            android:name=".ui.perfil.LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/Theme.TenisClubDroid.NoActionBar" />
         <activity

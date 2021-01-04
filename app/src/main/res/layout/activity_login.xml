@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:backgroundTint="@color/background"
-    tools:context=".LoginActivity">
+    tools:context=".ui.perfil.LoginActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -26,7 +26,7 @@
             android:layout_height="50dp"
             android:background="@color/rojo_google"
             android:backgroundTint="@color/rojo_google"
-            android:text="Entrar con Google"
+            android:text="@string/EntrarGoogle"
             android:textAllCaps="false"
             android:textColor="@color/blanco"
             app:icon="@drawable/googleg_standard_color_18"
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/background"
             android:fontFamily="sans-serif"
-            android:text="¿Aun no tienes cuenta?"
+            android:text="@string/Registro"
             android:textAllCaps="false"
             android:textColor="@color/gris"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -61,7 +61,7 @@
             android:backgroundTint="#0347F4"
             android:ems="10"
             android:foregroundTint="#020EAA"
-            android:hint="Contraseña"
+            android:hint="@string/Contra"
             android:inputType="textPassword"
             android:shadowColor="#071E91"
             android:textColor="@color/blanco"
@@ -85,7 +85,7 @@
             android:ems="10"
             android:fontFamily="sans-serif"
             android:foregroundTint="#020EAA"
-            android:hint="Email"
+            android:hint="@string/prompt_email"
             android:inputType="textPersonName"
             android:shadowColor="#071E91"
             android:textAllCaps="false"
@@ -102,7 +102,7 @@
             app:layout_constraintVertical_bias="0.319" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/ivRegistroLogo"
             android:layout_width="211dp"
             android:layout_height="205dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -118,7 +118,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/background"
             android:fontFamily="sans-serif"
-            android:text="Olvide mi contraseña"
+            android:text="@string/ContraOlvidada"
             android:textAllCaps="false"
             android:textColor="@color/gris"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -134,7 +134,7 @@
             android:layout_height="50dp"
             android:background="@color/dorado"
             android:backgroundTint="@color/dorado"
-            android:text="Entrar"
+            android:text="@string/Entrar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"

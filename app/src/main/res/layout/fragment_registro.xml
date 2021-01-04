@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:backgroundTint="@color/background"
-    tools:context=".ui.registro.RegistroFragment">
+    tools:context=".ui.Login.RegistroFragment">
 
     <EditText
         android:id="@+id/etRegistroUserName"
@@ -16,7 +16,7 @@
         android:backgroundTint="#0347F4"
         android:ems="10"
         android:foregroundTint="#020EAA"
-        android:hint="Usuario"
+        android:hint="@string/usuario"
         android:inputType="textPersonName"
         android:shadowColor="#071E91"
         android:textColor="@color/blanco"
@@ -38,7 +38,7 @@
         android:backgroundTint="#0347F4"
         android:ems="10"
         android:foregroundTint="#020EAA"
-        android:hint="Contraseña"
+        android:hint="@string/Contra"
         android:inputType="textPassword"
         android:shadowColor="#071E91"
         android:textColor="@color/blanco"
@@ -60,7 +60,7 @@
         android:backgroundTint="#0347F4"
         android:ems="10"
         android:foregroundTint="#020EAA"
-        android:hint="Email"
+        android:hint="@string/prompt_email"
         android:inputType="textEmailAddress"
         android:shadowColor="#071E91"
         android:textColor="@color/blanco"
@@ -82,7 +82,7 @@
         android:backgroundTint="#0347F4"
         android:ems="10"
         android:foregroundTint="#020EAA"
-        android:hint="Confirme Contraseña"
+        android:hint="@string/ConfirmarContra"
         android:inputType="textPassword"
         android:shadowColor="#071E91"
         android:textColor="@color/blanco"
@@ -98,7 +98,7 @@
         app:layout_constraintVertical_bias="0.619" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/ivRegistroLogo"
         android:layout_width="211dp"
         android:layout_height="205dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -114,11 +114,24 @@
         android:layout_height="50dp"
         android:background="@color/dorado"
         android:backgroundTint="@color/dorado"
-        android:text="Entrar"
+        android:text="@string/registrar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.469"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.897" />
+
+    <ImageView
+        android:id="@+id/ivRegistroAtras"
+        android:layout_width="75dp"
+        android:layout_height="45dp"
+        android:src="@drawable/ic_backarrow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.004" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

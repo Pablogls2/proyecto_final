@@ -8,8 +8,13 @@
     <string name="action_settings">Settings</string>
 
     <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_club">Club</string>
+    <string name="menu_contactos">Contactos</string>
+    <string name="menu_reservar">Reservar</string>
+    <string name="menu_historial">Historial</string>
+    <string name="menu_calendario">Calendario</string>
+    <string name="menu_perfil">Perfil</string>
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -32,4 +37,17 @@
     <string name="prefs_file">com.example.tenisclubdroid.PREFERENCE_FILE_KEY</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="editar">Editar</string>
+    <string name="registrar">Registrame</string>
+    <string name="usuario">Usuario</string>
+    <string name="Contra">Contraseña</string>
+    <string name="ConfirmarContra">Confirme Contraseña</string>
+    <string name="ContraOlvidada">Olvidé mi contraseña</string>
+    <string name="Registro">¿Aún no tienes cuenta?</string>
+    <string name="Entrar">Entrar</string>
+    <string name="EntrarGoogle">Entrar con Google</string>
+    <string name="Recordar">Recordar contraseña</string>
+    <string name="textoRestablecerContra">Introduce el email asociado a tu cuenta y te enviaremos un correo para cambiar restablecerla</string>
+    <string name="enviar">Enviar</string>
 </resources>

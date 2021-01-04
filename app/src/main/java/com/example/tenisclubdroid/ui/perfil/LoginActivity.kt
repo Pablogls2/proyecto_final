@@ -1,4 +1,4 @@
-package com.example.tenisclubdroid
+package com.example.tenisclubdroid.ui.perfil
 
 import android.content.Context
 import android.content.Intent
@@ -9,7 +9,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.tenisclubdroid.ui.registro.RegistroFragment
+import com.example.tenisclubdroid.Comunicacion
+import com.example.tenisclubdroid.MainActivity
+import com.example.tenisclubdroid.R
+import com.example.tenisclubdroid.ui.Login.RegistroFragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -33,37 +36,42 @@ class LoginActivity : AppCompatActivity() {
         var etLoginEmail = this.findViewById<EditText>(R.id.etLoginEmail)
         var etLoginPassword = this.findViewById<EditText>(R.id.etRegistroContra)
         var btnLoginGoogle = this.findViewById<Button>(R.id.btnLoginGoogle)
+        val btnLoginNuevaContra = this.findViewById<Button>(R.id.btnLoginNuevaContra)
 
         auth = FirebaseAuth.getInstance()
 
+        session()
 
         btnLogin.setOnClickListener(View.OnClickListener {
-            //se llama al metodo de login de la clase comunicacion una vez se hayan comprobado los campos
-            /*var resultado =
-                comunicacion.login(etLoginEmail.text.toString(), etLoginPassword.text.toString(), auth)
 
-            if (resultado == 0) {
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
+            if (!etLoginEmail.text.toString().isEmpty() && !etLoginPassword.text.toString()
+                    .isEmpty()
+            ) {
+
+
+                auth.signInWithEmailAndPassword(
+                    etLoginEmail.text.toString(),
+                    etLoginPassword.text.toString()
+                ).addOnCompleteListener {
+
+                    if (it.isSuccessful) {
+                        //Guardado de datos de sesion
+                        val prefs: SharedPreferences.Editor = getSharedPreferences(
+                            getString(R.string.prefs_file),
+                            Context.MODE_PRIVATE
+                        ).edit()
+                        prefs.putString("email", etLoginEmail.text.toString())
+                        prefs.putString("password", etLoginPassword.text.toString())
+                        prefs.apply()
+
+                        val intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
+                    } else {
+                        Toast.makeText(this, "Datos incorrectos!", Toast.LENGTH_SHORT).show()
+                    }
+                }
             } else {
-                if (resultado == 1) {
-                    Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this, "Datos incorrectos!", Toast.LENGTH_SHORT).show()
-                }
-
-            }*/
-            auth.signInWithEmailAndPassword(
-                etLoginEmail.text.toString(),
-                etLoginPassword.text.toString()
-            ).addOnCompleteListener {
-
-                if (it.isSuccessful) {
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                } else {
-                    Toast.makeText(this, "Datos incorrectos!", Toast.LENGTH_SHORT).show()
-                }
+                Toast.makeText(this, "Rellene todos los campos!", Toast.LENGTH_SHORT).show()
             }
 
 
@@ -96,14 +104,16 @@ class LoginActivity : AppCompatActivity() {
 
         })
 
-        //Guardado de datos de sesion
-        val prefs: SharedPreferences.Editor = getSharedPreferences(
-            getString(R.string.prefs_file),
-            Context.MODE_PRIVATE
-        ).edit()
-        prefs.putString("email", etLoginEmail.text.toString())
-        prefs.putString("password", etLoginPassword.text.toString())
-        prefs.apply()
+        btnLoginNuevaContra.setOnClickListener(View.OnClickListener {
+            val manager = supportFragmentManager
+            val transaction = manager.beginTransaction()
+            val ContraOlvidada = ContraOlvidada()
+            transaction.replace(R.id.coordinatorLayout, ContraOlvidada)
+            transaction.addToBackStack(null)
+            transaction.commit()
+
+
+        })
 
 
     }
@@ -137,5 +147,17 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun session() {
+        val prefs: SharedPreferences =
+            getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
+        val email = prefs.getString("email", null)
+        val password = prefs.getString("password", null)
 
+        if (email != null && password != null) {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+
+    }
 }

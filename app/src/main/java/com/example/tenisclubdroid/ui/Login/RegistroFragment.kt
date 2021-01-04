@@ -1,4 +1,4 @@
-package com.example.tenisclubdroid.ui.registro
+package com.example.tenisclubdroid.ui.Login
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,14 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.tenisclubdroid.Comunicacion
-import com.example.tenisclubdroid.LoginActivity
+import com.example.tenisclubdroid.ui.perfil.LoginActivity
 import com.example.tenisclubdroid.R
+import com.example.tenisclubdroid.ui.clases.Usuario
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import java.util.regex.Pattern
@@ -27,10 +28,6 @@ import java.util.regex.Pattern
  */
 class RegistroFragment : Fragment() {
 
-    //lateinit var auth: FirebaseAuth
-   // var databaseReference: DatabaseReference? = null
-   // var database: FirebaseDatabase? = null
-    var comunicacion = Comunicacion ()
     private lateinit var databaseReference: DatabaseReference
     private lateinit var database: FirebaseDatabase
     private lateinit var auth: FirebaseAuth
@@ -46,18 +43,22 @@ class RegistroFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_registro, container, false)
 
 
-
         val btnRegistrar = root.findViewById<Button>(R.id.btnRegistroRegistrar)
         val etRegistroEmail = root.findViewById<EditText>(R.id.etRegistroEmail)
         val etRegistroContra = root.findViewById<EditText>(R.id.etRegistroContra)
         val etRegistroConfirmContra = root.findViewById<EditText>(R.id.etRegistroConfirm)
         val etRegistroUserName = root.findViewById<EditText>(R.id.etRegistroUserName)
+        val ivRegistroAtras = root.findViewById<ImageView>(R.id.ivRegistroAtras)
 
         auth = FirebaseAuth.getInstance()
-        database = FirebaseDatabase.getInstance()
+        database =
+            FirebaseDatabase.getInstance("https://tenisclubdroid-default-rtdb.europe-west1.firebasedatabase.app/")
 
 
         databaseReference = database.reference.child("usuarios")
+
+
+
 
         btnRegistrar.setOnClickListener(View.OnClickListener {
 
@@ -69,7 +70,7 @@ class RegistroFragment : Fragment() {
             //se comprueba que todos los campos esten rellenos
             if (!email.isEmpty() && !contra.isEmpty() && !confirm_contra.isEmpty() && !usuario.isEmpty()) {
                 //se comprueba que el email tiene un formato correcto
-                if (comprobarEmail(email)) {
+                if (comprobarEmail(email.trim())) {
                     etRegistroEmail.setBackgroundTintList(activity?.applicationContext?.let { it1 ->
                         ContextCompat.getColorStateList(
                             it1, R.color.background_tint_azul
@@ -77,7 +78,7 @@ class RegistroFragment : Fragment() {
                     })
 
                     //se comprueba que la contraseña es correcta
-                    if (contra.equals(confirm_contra)) {
+                    if (contra.trim().equals(confirm_contra)) {
 
                         etRegistroConfirmContra.setBackgroundTintList(activity?.applicationContext?.let { it1 ->
                             ContextCompat.getColorStateList(
@@ -85,39 +86,42 @@ class RegistroFragment : Fragment() {
                             )
                         })
 
-                        //var registro =comunicacion.registro(email,usuario,contra, auth,database,databaseReference)
 
-                        /*when (registro){
-                            0 ->  Toast.makeText(context, "Usuario Creado", Toast.LENGTH_SHORT).show()
-                            1->   Toast.makeText(context, "Usuario NO Creado", Toast.LENGTH_SHORT).show()
-                            else -> Toast.makeText(context, "Error!", Toast.LENGTH_SHORT).show()
-
-                        }*/
 
                         FirebaseAuth.getInstance().createUserWithEmailAndPassword(
-                            etRegistroEmail.text.toString(),
-                            etRegistroContra.text.toString()
+                            etRegistroEmail.text.toString().trim(),
+                            etRegistroContra.text.toString().trim()
                         ).addOnCompleteListener {
 
                             if (it.isSuccessful) {
-                                val user: FirebaseUser = auth.currentUser!!
-                                /*val currentUser = auth.currentUser
-                                val currentUserDb = databaseReference?.child((currentUser?.uid!!))
+                                var id = FirebaseAuth.getInstance().currentUser?.uid.toString()
+                                var u = Usuario(usuario, email, contra, id, 0)
 
-                                currentUserDb?.child("nickname")?.setValue(usuario)
-                                currentUserDb?.child("rol")?.setValue(0)
 
-                                val toast1 = Toast.makeText(
-                                    context,
-                                    "Usuario Creado", Toast.LENGTH_SHORT
-                                )
-                                toast1.show()*/
+                                //meter en el usuario el id que sea igual al uid que hace Firebase por su cuenta
 
-                                val currentUserDb = databaseReference.child(user.uid)
+                                FirebaseAuth.getInstance().currentUser?.let { it1 ->
+                                    FirebaseDatabase.getInstance("\"https://tenisclubdroid-default-rtdb.europe-west1.firebasedatabase.app/\"")
+                                        .getReference("usuarios").child(
+                                            it1.uid
+                                        ).setValue(u).addOnCompleteListener {
 
-                                currentUserDb.child("nickname").setValue(usuario)
-                                currentUserDb.child("rol").setValue(0)
+                                            if (it.isSuccessful) {
+                                                val toast1 = Toast.makeText(
+                                                    context,
+                                                    "guardado", Toast.LENGTH_SHORT
+                                                )
+                                                toast1.show()
+                                            } else {
+                                                val toast1 = Toast.makeText(
+                                                    context,
+                                                    it.result.toString(), Toast.LENGTH_SHORT
+                                                )
+                                                toast1.show()
+                                            }
 
+                                        }
+                                }
 
                                 val intent = Intent(activity, LoginActivity::class.java)
                                 activity?.startActivity(intent)
@@ -169,6 +173,11 @@ class RegistroFragment : Fragment() {
             }
 
 
+        })
+
+        ivRegistroAtras.setOnClickListener(View.OnClickListener {
+            val intent = Intent(activity, LoginActivity::class.java)
+            activity?.startActivity(intent)
         })
 
         return root

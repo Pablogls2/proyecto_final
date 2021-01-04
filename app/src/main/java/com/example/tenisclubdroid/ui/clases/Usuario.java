@@ -2,7 +2,7 @@ package com.example.tenisclubdroid.ui.clases;
 
 public class Usuario  {
 
-    private String nickName,email,password,fotoPerfil,codigoQr,idUsuario;
+    private String nickName,email,password,fotoPerfil,codigoQr,idUsuario,descripcion;
     private int rol;
 
 
@@ -21,6 +21,10 @@ public class Usuario  {
         this.email = email;
         this.password = password;
         this.rol = rol;
+    }
+
+    public Usuario(){
+
     }
 
     public String getNickName() {

@@ -1,4 +1,4 @@
-package com.example.tenisclubdroid.ui.perfil
+package com.example.tenisclubdroid.ui.Login
 
 import android.content.Context
 import android.content.Intent
@@ -12,12 +12,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.tenisclubdroid.Comunicacion
 import com.example.tenisclubdroid.MainActivity
 import com.example.tenisclubdroid.R
-import com.example.tenisclubdroid.ui.Login.RegistroFragment
+import com.example.tenisclubdroid.ui.clases.Usuario
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.database.FirebaseDatabase
 
 class LoginActivity : AppCompatActivity() {
 
@@ -132,6 +133,30 @@ class LoginActivity : AppCompatActivity() {
                     FirebaseAuth.getInstance().signInWithCredential(credential)
                         .addOnCompleteListener {
                             if (it.isSuccessful) {
+
+                                val user = FirebaseAuth.getInstance().currentUser
+
+                                val nickname = user?.displayName.toString()
+                                val email = user?.email.toString()
+                                val id = user?.uid.toString()
+                                val foto = user?.photoUrl.toString()
+                                val u = Usuario(nickname, email, "",  foto,id,0)
+
+                                FirebaseAuth.getInstance().currentUser?.let { it1 ->
+                                    FirebaseDatabase.getInstance("https://tenisclubdroid-default-rtdb.europe-west1.firebasedatabase.app/")
+                                        .getReference("usuarios").child(
+                                            it1.uid
+                                        ).setValue(u).addOnCompleteListener {
+
+                                            if (it.isSuccessful) {
+
+                                            } else {
+
+                                            }
+
+                                        }
+                                }
+
                                 val intent = Intent(this, MainActivity::class.java)
                                 startActivity(intent)
                             } else {

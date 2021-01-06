@@ -142,15 +142,14 @@ class LoginActivity : AppCompatActivity() {
                     FirebaseAuth.getInstance().signInWithCredential(credential)
                         .addOnCompleteListener {
                             if (it.isSuccessful) {
-
+                                //se recoge el usuario
                                 val user = FirebaseAuth.getInstance().currentUser
-
+                                //se cogen sus datos
                                 val nickname = user?.displayName.toString()
-                                val email = user?.email.toString()
                                 val id = user?.uid.toString()
                                 val foto = user?.photoUrl.toString()
-                                val u = Usuario(nickname, email, "", foto, id, 0)
-
+                                val u = Usuario(nickname, foto,"Tu descripcion", 0, id)
+                                //se guarda en la base de datos
                                 FirebaseAuth.getInstance().currentUser?.let { it1 ->
                                     FirebaseDatabase.getInstance("https://tenisclubdroid-default-rtdb.europe-west1.firebasedatabase.app/")
                                         .getReference("usuarios").child(

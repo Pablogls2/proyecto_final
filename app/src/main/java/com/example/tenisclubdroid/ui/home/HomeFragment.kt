@@ -36,7 +36,7 @@ class HomeFragment : Fragment() {
         })
 
 
-        auth = FirebaseAuth.getInstance()
+       /* auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
         databaseReference = database.reference.child("usuarios")
 
@@ -55,7 +55,7 @@ class HomeFragment : Fragment() {
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
-        })
+        })*/
 
 
 

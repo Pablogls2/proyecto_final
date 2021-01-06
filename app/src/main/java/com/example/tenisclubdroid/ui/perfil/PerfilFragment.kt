@@ -3,6 +3,7 @@ package com.example.tenisclubdroid.ui.perfil
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
@@ -66,8 +67,16 @@ class PerfilFragment : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 tvPerfilNickName.setText(snapshot.child("nickName").value.toString())
                 tvPerfilDescripcion.setText(snapshot.child("descripcion").value.toString())
-                fotoUrl=snapshot.child("fotoPerfil").value.toString()
-                Picasso.get().load(fotoUrl).transform( ImagenRedonda()).into(ivPerfilFoto)
+                fotoUrl = snapshot.child("fotoPerfil").value.toString()
+                Picasso.get().load(fotoUrl).transform(ImagenRedonda()).into(ivPerfilFoto)
+                usuario = Usuario(
+                    tvPerfilNickName.text.toString(),
+                    fotoUrl,
+                    tvPerfilDescripcion.text.toString(),
+                    0,
+                    id_usuario
+                )
+
 
             }
 
@@ -78,7 +87,6 @@ class PerfilFragment : Fragment() {
         })
 
         //public Usuario(String nickName, String fotoPerfil, String descripcion, int rol) {
-        usuario = Usuario(tvPerfilNickName.text.toString(),fotoUrl,tvPerfilDescripcion.text.toString(),0 )
 
         return root;
 
@@ -94,9 +102,15 @@ class PerfilFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_edit -> {
-                Bundle bundle = Bundle()
+                //para meter en un fragment info
+                /*val bundle = Bundle()
+                Log.e("usuario"," d" + usuario.nickName)
+                bundle.putSerializable("usuario",usuario)*/
+
                 val fm = fragmentManager
-                val edit_perfil = EditarPerfilFragment()
+                val edit_perfil = EditarPerfilFragment.newInstance(usuario)
+                //edit_perfil.arguments.apply { bundle }
+
                 val transaction = fm!!.beginTransaction()
                 transaction.replace(R.id.nav_host_fragment, edit_perfil)
                 transaction.addToBackStack(null)
@@ -118,6 +132,7 @@ class PerfilFragment : Fragment() {
         }
         return super.onOptionsItemSelected(item)
     }
+
 
 
 

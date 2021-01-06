@@ -2,6 +2,7 @@ package com.example.tenisclubdroid.ui.perfil
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -22,6 +23,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
 import java.io.IOException
 import java.util.*
 
@@ -39,6 +41,7 @@ class EditarPerfilFragment : Fragment() {
     lateinit var ivPerfilFoto: ImageView
     lateinit var etEditarNickName: EditText
     lateinit var etEditarDescripcion: EditText
+    lateinit var usuario : Usuario
 
     var fotoUri: Uri? = null
     private lateinit var database: FirebaseDatabase
@@ -49,12 +52,20 @@ class EditarPerfilFragment : Fragment() {
 
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        arguments?.getSerializable("usuario").let {
+            usuario= it as Usuario
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_editar_perfil, container, false)
+
 
         //para que el teclado no se vuelva loco
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
@@ -70,6 +81,9 @@ class EditarPerfilFragment : Fragment() {
         ivPerfilFoto = root.findViewById<ImageView>(R.id.ivEditarPerfilFoto)
         val btnPerfilActualizar = root.findViewById<Button>(R.id.btnEditarActualizar)
 
+        etEditarNickName.setText(usuario.nickName)
+        etEditarDescripcion.setText(usuario.descripcion)
+        Picasso.get().load(usuario.fotoPerfil).transform(ImagenRedonda()).into(ivPerfilFoto)
 
         btnEditarFoto.setOnClickListener(View.OnClickListener {
 
@@ -196,25 +210,18 @@ class EditarPerfilFragment : Fragment() {
             }
         }
     }
-    /*companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment EditarPerfilFragment.
-         */
-        // TODO: Rename and change types and number of parameters
+
+
+    companion object {
+
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(usuario: Usuario) =
             EditarPerfilFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putSerializable("usuario",usuario)
                 }
             }
-    }*/
+    }
 
     private fun subirUsuario() {
         if (fotoUri == null){
@@ -238,7 +245,7 @@ class EditarPerfilFragment : Fragment() {
 
 
         //public Usuario(String nickName, String fotoPerfil, String descripcion, int rol)
-        val user = Usuario(etEditarNickName.text.toString() ,fotoUrl,"pito", 0)
+        val user = Usuario(etEditarNickName.text.toString() ,fotoUrl,"pito", 0, fUser.uid.toString())
         currentUserDb.setValue(user)
         Toast.makeText(activity?.baseContext, "Perfil Actualizado", Toast.LENGTH_SHORT).show()
 

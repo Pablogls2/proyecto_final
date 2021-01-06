@@ -25,11 +25,12 @@ public class Usuario implements Serializable {
         this.rol = rol;
     }
 
-    public Usuario(String nickName, String fotoPerfil, String descripcion, int rol) {
+    public Usuario(String nickName, String fotoPerfil, String descripcion, int rol, String idUsuario) {
         this.nickName = nickName;
         this.fotoPerfil = fotoPerfil;
         this.descripcion = descripcion;
         this.rol= rol;
+        this.idUsuario=idUsuario;
     }
 
 

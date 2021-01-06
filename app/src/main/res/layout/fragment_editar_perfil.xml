@@ -2,36 +2,20 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/ConstraintLayoutPerfil"
+    android:id="@+id/ConstraintLayoutEditarPerfil"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
     tools:context=".ui.perfil.PerfilFragment" >
 
     <EditText
-        android:id="@+id/editTextTextPersonName2"
-        android:layout_width="424dp"
-        android:layout_height="41dp"
-        android:backgroundTint="@color/blanco"
-        android:editable="false"
-        android:ems="10"
-        android:enabled="false"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.773" />
-
-    <TextView
-        android:id="@+id/etPerfilDescripcion"
-        android:layout_width="314dp"
-        android:layout_height="131dp"
-        android:backgroundTint="@color/background"
+        android:id="@+id/etEditarPerfilDescripcion"
+        android:layout_width="337dp"
+        android:layout_height="167dp"
+        android:backgroundTint="@color/dorado"
         android:ems="10"
         android:foregroundTint="#020EAA"
-        android:hint="@string/prompt_email"
+        android:hint="@string/descripcion"
         android:inputType="textMultiLine"
         android:shadowColor="#071E91"
         android:text="Tu descripcion"
@@ -40,19 +24,18 @@
         android:textColorHint="#FFFFFF"
         android:textColorLink="#071E91"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/btnPerfilQr"
+        app:layout_constraintBottom_toTopOf="@+id/btnEditarActualizar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName"
-        app:layout_constraintVertical_bias="0.139" />
+        app:layout_constraintTop_toBottomOf="@+id/etEditarPerfilNickName"
+        app:layout_constraintVertical_bias="0.277" />
 
-    <TextView
-        android:id="@+id/etPerfilNickName"
+    <EditText
+        android:id="@+id/etEditarPerfilNickName"
         android:layout_width="335dp"
         android:layout_height="47dp"
-        android:background="@color/background"
-        android:backgroundTint="@color/background"
+        android:layout_marginTop="36dp"
+        android:backgroundTint="@color/dorado"
         android:ems="10"
         android:foregroundTint="#020EAA"
         android:hint="@string/usuario"
@@ -63,15 +46,15 @@
         android:textColorHint="#FFFFFF"
         android:textColorLink="#071E91"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/etPerfilDescripcion"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.631"
+        app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivPerfilFoto"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/ivEditarPerfilFoto"
+        app:layout_constraintVertical_bias="0.61" />
 
     <ImageView
-        android:id="@+id/ivPerfilFoto"
+        android:id="@+id/ivEditarPerfilFoto"
         android:layout_width="186dp"
         android:layout_height="206dp"
         android:background="@color/dorado"
@@ -85,33 +68,30 @@
         app:layout_constraintVertical_bias="0.085" />
 
     <Button
-        android:id="@+id/btnPerfilQr"
+        android:id="@+id/btnEditarActualizar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/gris"
-        android:backgroundTint="@color/gris"
-        android:text="@string/qr"
+        android:background="@color/verde"
+        android:backgroundTint="@color/verde"
+        android:text="@string/Actualizar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.486"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivPerfilFoto"
-        app:layout_constraintVertical_bias="0.747" />
-
-    <EditText
-        android:id="@+id/editTextTextPersonName"
-        android:layout_width="422dp"
-        android:layout_height="35dp"
-        android:layout_marginTop="112dp"
-        android:backgroundTint="@color/blanco"
-        android:ems="10"
-        android:enabled="false"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.545"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.375" />
+        app:layout_constraintVertical_bias="0.865" />
+
+    <ImageButton
+        android:id="@+id/ibEditarPerfilFoto"
+        android:layout_width="52dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="28dp"
+        android:src="@drawable/ic_camara_blanca"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/ivPerfilFoto"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.299" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

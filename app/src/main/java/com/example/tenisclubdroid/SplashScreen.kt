@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import com.example.tenisclubdroid.ui.perfil.LoginActivity
+import com.example.tenisclubdroid.ui.Login.LoginActivity
 
 
 class SplashScreen : AppCompatActivity() {

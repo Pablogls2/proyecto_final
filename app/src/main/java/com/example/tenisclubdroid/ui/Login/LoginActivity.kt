@@ -1,5 +1,6 @@
-package com.example.tenisclubdroid.ui.perfil
+package com.example.tenisclubdroid.ui.Login
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -12,18 +13,25 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.tenisclubdroid.Comunicacion
 import com.example.tenisclubdroid.MainActivity
 import com.example.tenisclubdroid.R
-import com.example.tenisclubdroid.ui.Login.RegistroFragment
+import com.example.tenisclubdroid.ui.clases.Usuario
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.database.FirebaseDatabase
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.DexterError
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.PermissionRequestErrorListener
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth;
     private val GOOGLE_SIGN_IN = 100
-    var comunicacion = Comunicacion()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +49,7 @@ class LoginActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
         session()
+        pedirMultiplesPermisos()
 
         btnLogin.setOnClickListener(View.OnClickListener {
 
@@ -66,6 +75,7 @@ class LoginActivity : AppCompatActivity() {
 
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
+                        finish()
                     } else {
                         Toast.makeText(this, "Datos incorrectos!", Toast.LENGTH_SHORT).show()
                     }
@@ -132,8 +142,33 @@ class LoginActivity : AppCompatActivity() {
                     FirebaseAuth.getInstance().signInWithCredential(credential)
                         .addOnCompleteListener {
                             if (it.isSuccessful) {
+                                //se recoge el usuario
+                                val user = FirebaseAuth.getInstance().currentUser
+                                //se cogen sus datos
+                                val nickname = user?.displayName.toString()
+                                val id = user?.uid.toString()
+                                val foto = user?.photoUrl.toString()
+                                val u = Usuario(nickname, foto,"Tu descripcion", 0, id)
+                                //se guarda en la base de datos
+                                FirebaseAuth.getInstance().currentUser?.let { it1 ->
+                                    FirebaseDatabase.getInstance("https://tenisclubdroid-default-rtdb.europe-west1.firebasedatabase.app/")
+                                        .getReference("usuarios").child(
+                                            it1.uid
+                                        ).setValue(u).addOnCompleteListener {
+
+                                            if (it.isSuccessful) {
+
+                                            } else {
+
+                                            }
+
+                                        }
+                                }
+
                                 val intent = Intent(this, MainActivity::class.java)
                                 startActivity(intent)
+                                finish()
+
                             } else {
                                 //Toast.makeText(this, "Error de acceso", Toast.LENGTH_SHORT).show()
                             }
@@ -159,5 +194,44 @@ class LoginActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    private fun pedirMultiplesPermisos() {
+        // Indicamos el permisos y el manejador de eventos de los mismos
+        Dexter.withActivity(this)
+            .withPermissions(
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.INTERNET
+            )
+            .withListener(object : MultiplePermissionsListener {
+                override fun onPermissionsChecked(report: MultiplePermissionsReport) {
+                    // ccomprbamos si tenemos los permisos de todos ellos
+                    if (report.areAllPermissionsGranted()) {
+                        //Toast.makeText(getContext(), "¡Todos los permisos concedidos!", Toast.LENGTH_SHORT).show();
+                    }
+
+                    // comprobamos si hay un permiso que no tenemos concedido ya sea temporal o permanentemente
+                    if (report.isAnyPermissionPermanentlyDenied()) {
+                        // abrimos un diálogo a los permisos
+                        //openSettingsDialog();
+                    }
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permissions: List<PermissionRequest?>?,
+                    token: PermissionToken
+                ) {
+                    token.continuePermissionRequest()
+                }
+            }).withErrorListener(object : PermissionRequestErrorListener {
+                override fun onError(error: DexterError?) {
+
+                }
+            })
+            .onSameThread()
+            .check()
     }
 }

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:backgroundTint="@color/background"
-    tools:context=".ui.perfil.ContraOlvidada" >
+    tools:context=".ui.Login.ContraOlvidada" >
 
     <Button
         android:id="@+id/btnContraOlvidadaEnviar"

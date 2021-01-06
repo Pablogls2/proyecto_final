@@ -11,12 +11,11 @@
     <EditText
         android:id="@+id/etEditarPerfilDescripcion"
         android:layout_width="337dp"
-        android:layout_height="166dp"
-        android:layout_marginTop="352dp"
-        android:backgroundTint="@color/background"
+        android:layout_height="167dp"
+        android:backgroundTint="@color/dorado"
         android:ems="10"
         android:foregroundTint="#020EAA"
-        android:hint="@string/prompt_email"
+        android:hint="@string/descripcion"
         android:inputType="textMultiLine"
         android:shadowColor="#071E91"
         android:text="Tu descripcion"
@@ -25,22 +24,21 @@
         android:textColorHint="#FFFFFF"
         android:textColorLink="#071E91"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/btnPerfilQr"
+        app:layout_constraintBottom_toTopOf="@+id/btnEditarActualizar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.486"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.909" />
+        app:layout_constraintTop_toBottomOf="@+id/etEditarPerfilNickName"
+        app:layout_constraintVertical_bias="0.277" />
 
     <EditText
         android:id="@+id/etEditarPerfilNickName"
         android:layout_width="335dp"
         android:layout_height="47dp"
         android:layout_marginTop="36dp"
-        android:backgroundTint="@color/background"
+        android:backgroundTint="@color/dorado"
         android:ems="10"
         android:foregroundTint="#020EAA"
-        android:hint="@string/prompt_email"
+        android:hint="@string/usuario"
         android:inputType="textEmailAddress"
         android:shadowColor="#071E91"
         android:textColor="@color/blanco"
@@ -73,15 +71,14 @@
         android:id="@+id/btnEditarActualizar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="96dp"
         android:background="@color/verde"
         android:backgroundTint="@color/verde"
         android:text="@string/Actualizar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivPerfilFoto"
-        app:layout_constraintVertical_bias="0.747" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.865" />
 
     <ImageButton
         android:id="@+id/ibEditarPerfilFoto"

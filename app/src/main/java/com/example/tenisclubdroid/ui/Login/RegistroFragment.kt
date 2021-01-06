@@ -59,7 +59,7 @@ class RegistroFragment : Fragment() {
 
 
         databaseReference = database.reference.child("usuarios")
-        nombresCogidos = database.reference.child("NombresCogiodos")
+        nombresCogidos = database.reference.child("NombresCogidos")
 
 
 
@@ -177,7 +177,9 @@ class RegistroFragment : Fragment() {
                         if (it.isSuccessful) {
                             val id =
                                 FirebaseAuth.getInstance().currentUser?.uid.toString()
-                            var u = Usuario(usuario, email, contra, id, 0)
+                            val foto_predeterminada= "https://firebasestorage.googleapis.com/v0/b/tenisclubdroid.appspot.com/o/usuario.jpg?alt=media&token=b34680bc-64a9-4598-a734-8180aa5d2844"
+                            //public Usuario(String nickName, String fotoPerfil, String descripcion, int rol)
+                            var u = Usuario(usuario, foto_predeterminada,"Tu descripcion",  0,id)
 
 
                             FirebaseAuth.getInstance().currentUser?.let { it1 ->
@@ -187,7 +189,7 @@ class RegistroFragment : Fragment() {
                                     ).setValue(u).addOnCompleteListener {
 
                                         if (it.isSuccessful) {
-                                            nombresCogidos.child(usuario).setValue(true)
+                                            nombresCogidos.child(usuario).setValue(id)
                                             val toast1 = Toast.makeText(
                                                 context,
                                                 "guardado", Toast.LENGTH_SHORT

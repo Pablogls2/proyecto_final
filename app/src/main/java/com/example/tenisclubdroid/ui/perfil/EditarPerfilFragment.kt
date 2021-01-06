@@ -7,24 +7,23 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.os.StrictMode
 import android.provider.MediaStore
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
 import com.example.tenisclubdroid.R
 import com.example.tenisclubdroid.ui.clases.Usuario
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
+import java.io.File
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -41,21 +40,30 @@ class EditarPerfilFragment : Fragment() {
     lateinit var ivPerfilFoto: ImageView
     lateinit var etEditarNickName: EditText
     lateinit var etEditarDescripcion: EditText
-    lateinit var usuario : Usuario
+    lateinit var btnEditarFoto: ImageButton
+    lateinit var btnPerfilActualizar: Button
+
+
+    lateinit var usuario: Usuario
+    lateinit var currentPhotoPath: String
+    lateinit var photoUri: Uri
+    lateinit var root: View
 
     var fotoUri: Uri? = null
     private lateinit var database: FirebaseDatabase
     private lateinit var databaseReference: DatabaseReference
+    private lateinit var nombresCogidos: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
 
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         arguments?.getSerializable("usuario").let {
-            usuario= it as Usuario
+            usuario = it as Usuario
         }
     }
 
@@ -64,26 +72,22 @@ class EditarPerfilFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val root = inflater.inflate(R.layout.fragment_editar_perfil, container, false)
+        root = inflater.inflate(R.layout.fragment_editar_perfil, container, false)
 
 
         //para que el teclado no se vuelva loco
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
+        //inicializamos
+        inicializar()
+
         database =
             FirebaseDatabase.getInstance("https://tenisclubdroid-default-rtdb.europe-west1.firebasedatabase.app/")
 
         databaseReference = database.reference.child("usuarios")
+        nombresCogidos = database.reference.child("NombresCogidos")
 
-        etEditarNickName = root.findViewById<EditText>(R.id.etEditarPerfilNickName)
-        etEditarDescripcion = root.findViewById<EditText>(R.id.etEditarPerfilDescripcion)
-        val btnEditarFoto = root.findViewById<ImageButton>(R.id.ibEditarPerfilFoto)
-        ivPerfilFoto = root.findViewById<ImageView>(R.id.ivEditarPerfilFoto)
-        val btnPerfilActualizar = root.findViewById<Button>(R.id.btnEditarActualizar)
 
-        etEditarNickName.setText(usuario.nickName)
-        etEditarDescripcion.setText(usuario.descripcion)
-        Picasso.get().load(usuario.fotoPerfil).transform(ImagenRedonda()).into(ivPerfilFoto)
 
         btnEditarFoto.setOnClickListener(View.OnClickListener {
 
@@ -93,7 +97,47 @@ class EditarPerfilFragment : Fragment() {
         })
 
         btnPerfilActualizar.setOnClickListener(View.OnClickListener {
-            subirUsuario()
+
+            //se comprueba que estan los campos rellenos
+            if (!etEditarNickName.text.toString().isEmpty() && !etEditarDescripcion.text.toString()
+                    .isEmpty()
+            ) {
+
+                val nickname = etEditarNickName.text.toString()
+
+                nombresCogidos.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        Log.e("repetido", "" + dataSnapshot.child(nickname).key)
+                        if (!dataSnapshot.hasChild(nickname) || dataSnapshot.child(nickname).value == usuario.idUsuario) {
+                            nombresCogidos.child(nickname).setValue(usuario.idUsuario)
+                            if (!etEditarNickName.text.toString()
+                                    .equals(nombresCogidos.child(usuario.nickName))
+                            ) {
+
+                                nombresCogidos.child(usuario.nickName).removeValue()
+                            }
+                            subirUsuario()
+                        } else {
+                            Toast.makeText(
+                                activity?.baseContext,
+                                "Nombre de usuario no valido",
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+                })
+                ///
+
+
+            } else {
+                Toast.makeText(activity?.baseContext, "Revise los campos", Toast.LENGTH_SHORT)
+                    .show()
+            }
         })
 
 
@@ -112,7 +156,8 @@ class EditarPerfilFragment : Fragment() {
         ) { dialog, which ->
             when (which) {
                 0 -> elegirFotoGaleria()
-                1 -> tomarFotoCamara()
+                1 -> //tomarFotoCamara()
+                    Toast.makeText(activity, "Proximamente...", Toast.LENGTH_SHORT).show()
             }
         }
         fotoDialogo.show()
@@ -141,9 +186,9 @@ class EditarPerfilFragment : Fragment() {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
             // Esto para alta calidad
-            // photoURI = Uri.fromFile(this.crearFichero());
-            // intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, photoURI);
-
+            fotoUri = Uri.fromFile(this.createImageFile());
+            intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, fotoUri);
+            Log.e("foto", "d" + fotoUri)
             // Esto para alta y baja
             startActivityForResult(intent, CAMARA)
         } catch (e: Exception) {
@@ -171,9 +216,10 @@ class EditarPerfilFragment : Fragment() {
                     )
                     //guardamos en un bitmap publico el bitmap cogido
                     // imagenFinal = bitmap
-                    Toast.makeText(activity, "¡Foto salvada!", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(activity, "¡Foto salvada!", Toast.LENGTH_SHORT).show()
                     //mostramos en el ImageView el bitmap seleccionado
-                    this.ivPerfilFoto.setImageBitmap(bitmap)
+
+                    Picasso.get().load(fotoUri).transform(ImagenRedonda()).into(ivPerfilFoto)
                     // imagen = bitmapToBase64(bitmap)
                 } catch (e: IOException) {
                     e.printStackTrace()
@@ -191,15 +237,20 @@ class EditarPerfilFragment : Fragment() {
                     // Esta línea para baja
                     thumbnail = data!!.extras!!["data"] as Bitmap?
                     // Esto para alta
-                    // thumbnail = MediaStore.Images.Media.getBitmap(getActivity().getApplicationContext().getContentResolver(), photoURI);
+                    thumbnail = MediaStore.Images.Media.getBitmap(
+                        getActivity()?.getApplicationContext()?.getContentResolver(), fotoUri
+                    );
+                    Log.e("foto", "thumbnail" + fotoUri.toString())
                     //imagenFinal = thumbnail
                     // salvamos
                     // path = salvarImagen(thumbnail); //  photoURI.getPath(); Podríamos poner esto, pero vamos a salvarla comprimida y borramos la no comprimida (por gusto)
                     //mostramos en el ImageView el bitmap seleccionado
-                    this.ivPerfilFoto.setImageBitmap(thumbnail)
+                    //this.ivPerfilFoto.setImageBitmap(thumbnail)
+                    Picasso.get().load(fotoUri).transform(ImagenRedonda()).into(ivPerfilFoto)
                     //imagen = bitmapToBase64(thumbnail)
                 } catch (e: java.lang.Exception) {
-                    Toast.makeText(activity, "¡Fallito wey!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "¡Fallito wey!" + e.toString(), Toast.LENGTH_SHORT)
+                        .show()
                 }
                 // Borramos el fichero de la URI
                 //borrarFichero(photoURI.getPath());
@@ -211,6 +262,17 @@ class EditarPerfilFragment : Fragment() {
         }
     }
 
+    private fun inicializar() {
+        etEditarNickName = root.findViewById<EditText>(R.id.etEditarPerfilNickName)
+        etEditarDescripcion = root.findViewById<EditText>(R.id.etEditarPerfilDescripcion)
+        btnEditarFoto = root.findViewById<ImageButton>(R.id.ibEditarPerfilFoto)
+        ivPerfilFoto = root.findViewById<ImageView>(R.id.ivEditarPerfilFoto)
+        btnPerfilActualizar = root.findViewById<Button>(R.id.btnEditarActualizar)
+
+        etEditarNickName.setText(usuario.nickName)
+        etEditarDescripcion.setText(usuario.descripcion)
+        Picasso.get().load(usuario.fotoPerfil).transform(ImagenRedonda()).into(ivPerfilFoto)
+    }
 
     companion object {
 
@@ -218,15 +280,15 @@ class EditarPerfilFragment : Fragment() {
         fun newInstance(usuario: Usuario) =
             EditarPerfilFragment().apply {
                 arguments = Bundle().apply {
-                    putSerializable("usuario",usuario)
+                    putSerializable("usuario", usuario)
                 }
             }
     }
 
     private fun subirUsuario() {
-        if (fotoUri == null){
-            //guardar(user.getFotoPerfil)
-        }else{
+        if (fotoUri == null) {
+            guardar(usuario.fotoPerfil)
+        } else {
             val filename = UUID.randomUUID().toString()
             val ref = FirebaseStorage.getInstance().getReference("/imagenes/$filename")
 
@@ -245,7 +307,13 @@ class EditarPerfilFragment : Fragment() {
 
 
         //public Usuario(String nickName, String fotoPerfil, String descripcion, int rol)
-        val user = Usuario(etEditarNickName.text.toString() ,fotoUrl,"pito", 0, fUser.uid.toString())
+        val user = Usuario(
+            etEditarNickName.text.toString().trim(),
+            fotoUrl,
+            etEditarDescripcion.text.toString().trim(),
+            0,
+            fUser.uid.toString()
+        )
         currentUserDb.setValue(user)
         Toast.makeText(activity?.baseContext, "Perfil Actualizado", Toast.LENGTH_SHORT).show()
 
@@ -256,5 +324,44 @@ class EditarPerfilFragment : Fragment() {
         transaction.replace(R.id.nav_host_fragment, perfil)
         transaction.addToBackStack(null)
         transaction.commit()
+    }
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir: File = context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
+
+        return File.createTempFile(
+            "JPEG_${timeStamp}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        ).apply {
+            // Save a file: path for use with ACTION_VIEW intents
+            currentPhotoPath = absolutePath
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu!!, inflater)
+        inflater.inflate(R.menu.menu_editar_perfil, menu)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_back -> {
+                val perfil = PerfilFragment()
+              
+                val fm = fragmentManager
+                val transaction = fm!!.beginTransaction()
+                transaction.replace(R.id.nav_host_fragment, perfil)
+                transaction.addToBackStack(null)
+                transaction.commit()
+
+            }
+
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

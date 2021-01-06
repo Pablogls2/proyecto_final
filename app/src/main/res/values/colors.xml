@@ -10,6 +10,7 @@
     <color name="blanco">#FFFFFF</color>
     <color name="gris">#C5C5CA</color>
     <color name="dorado">#D6DD66</color>
+    <color name="verde">#83D686</color>
     <color name="rojo_google">#DB4A39</color>
     <color name="background_tint_azul">#FF0347F4</color>
 </resources>

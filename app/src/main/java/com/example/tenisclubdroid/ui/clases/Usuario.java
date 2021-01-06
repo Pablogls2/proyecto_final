@@ -1,6 +1,8 @@
 package com.example.tenisclubdroid.ui.clases;
 
-public class Usuario  {
+import java.io.Serializable;
+
+public class Usuario implements Serializable {
 
     private String nickName,email,password,fotoPerfil,codigoQr,idUsuario,descripcion;
     private int rol;
@@ -23,8 +25,24 @@ public class Usuario  {
         this.rol = rol;
     }
 
+    public Usuario(String nickName, String fotoPerfil, String descripcion, int rol) {
+        this.nickName = nickName;
+        this.fotoPerfil = fotoPerfil;
+        this.descripcion = descripcion;
+        this.rol= rol;
+    }
+
+
     public Usuario(){
 
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public String getNickName() {

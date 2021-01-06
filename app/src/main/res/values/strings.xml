@@ -50,4 +50,6 @@
     <string name="Recordar">Recordar contraseña</string>
     <string name="textoRestablecerContra">Introduce el email asociado a tu cuenta y te enviaremos un correo para cambiar restablecerla</string>
     <string name="enviar">Enviar</string>
+    <string name="qr">Generar Codigo QR</string>
+    <string name="Actualizar">Actualizar</string>
 </resources>

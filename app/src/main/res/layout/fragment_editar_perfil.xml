@@ -2,16 +2,17 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/ConstraintLayoutPerfil"
+    android:id="@+id/ConstraintLayoutEditarPerfil"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
     tools:context=".ui.perfil.PerfilFragment" >
 
-    <TextView
-        android:id="@+id/etPerfilDescripcion"
+    <EditText
+        android:id="@+id/etEditarPerfilDescripcion"
         android:layout_width="337dp"
         android:layout_height="166dp"
+        android:layout_marginTop="352dp"
         android:backgroundTint="@color/background"
         android:ems="10"
         android:foregroundTint="#020EAA"
@@ -26,18 +27,20 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/btnPerfilQr"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.486"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.909" />
 
-    <TextView
-        android:id="@+id/etPerfilNickName"
+    <EditText
+        android:id="@+id/etEditarPerfilNickName"
         android:layout_width="335dp"
         android:layout_height="47dp"
+        android:layout_marginTop="36dp"
         android:backgroundTint="@color/background"
         android:ems="10"
         android:foregroundTint="#020EAA"
-        android:hint="@string/usuario"
+        android:hint="@string/prompt_email"
         android:inputType="textEmailAddress"
         android:shadowColor="#071E91"
         android:textColor="@color/blanco"
@@ -47,12 +50,13 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/etPerfilDescripcion"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivPerfilFoto"
+        app:layout_constraintTop_toBottomOf="@+id/ivEditarPerfilFoto"
         app:layout_constraintVertical_bias="0.61" />
 
     <ImageView
-        android:id="@+id/ivPerfilFoto"
+        android:id="@+id/ivEditarPerfilFoto"
         android:layout_width="186dp"
         android:layout_height="206dp"
         android:background="@color/dorado"
@@ -66,17 +70,31 @@
         app:layout_constraintVertical_bias="0.085" />
 
     <Button
-        android:id="@+id/btnPerfilQr"
+        android:id="@+id/btnEditarActualizar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/gris"
-        android:backgroundTint="@color/gris"
-        android:text="@string/qr"
+        android:layout_marginBottom="96dp"
+        android:background="@color/verde"
+        android:backgroundTint="@color/verde"
+        android:text="@string/Actualizar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.486"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivPerfilFoto"
         app:layout_constraintVertical_bias="0.747" />
+
+    <ImageButton
+        android:id="@+id/ibEditarPerfilFoto"
+        android:layout_width="52dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="28dp"
+        android:src="@drawable/ic_camara_blanca"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/ivPerfilFoto"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.299" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

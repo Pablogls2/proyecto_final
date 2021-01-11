@@ -54,4 +54,5 @@
     <string name="Actualizar">Actualizar</string>
     <string name="descripcion">Tu Descripcion</string>
     <string name="mensaje_home">Bienvenido a tu aplicacion para reservar pistas de tenis</string>
+    <string name="EntrarTwitter">Entra con Twitter</string>
 </resources>

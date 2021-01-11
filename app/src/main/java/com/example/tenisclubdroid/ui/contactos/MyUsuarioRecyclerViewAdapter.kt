@@ -1,0 +1,46 @@
+package com.example.tenisclubdroid.ui.contactos
+
+import androidx.recyclerview.widget.RecyclerView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import com.example.tenisclubdroid.R
+import com.example.tenisclubdroid.ui.clases.Contacto
+import com.example.tenisclubdroid.ui.clases.Usuario
+
+import com.example.tenisclubdroid.ui.perfil.ImagenRedonda
+import com.squareup.picasso.Picasso
+
+/**
+ * [RecyclerView.Adapter] that can display a [DummyItem].
+ * TODO: Replace the implementation with code for your data type.
+ */
+class MyUsuarioRecyclerViewAdapter(
+    private val values: List<Contacto>
+) : RecyclerView.Adapter<MyUsuarioRecyclerViewAdapter.ViewHolder>() {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.fragment_contactos, parent, false)
+        return ViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val item = values[position]
+        Picasso.get().load(item.fotoPerfil).transform(ImagenRedonda()).into(holder.ivImagen)
+        holder.tvNickname.text = item.nickName
+    }
+
+    override fun getItemCount(): Int = values.size
+
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val ivImagen: ImageView = view.findViewById(R.id.ivContactosImagen)
+        val tvNickname: TextView = view.findViewById(R.id.tvContactosNickname)
+
+        override fun toString(): String {
+            return super.toString() + " '" + tvNickname.text + "'"
+        }
+    }
+}

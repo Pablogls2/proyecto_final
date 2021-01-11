@@ -2,6 +2,7 @@ package com.example.tenisclubdroid.ui.perfil
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -109,13 +110,14 @@ class EditarPerfilFragment : Fragment() {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         Log.e("repetido", "" + dataSnapshot.child(nickname).key)
                         if (!dataSnapshot.hasChild(nickname) || dataSnapshot.child(nickname).value == usuario.idUsuario) {
-                            nombresCogidos.child(nickname).setValue(usuario.idUsuario)
+
                             if (!etEditarNickName.text.toString()
                                     .equals(nombresCogidos.child(usuario.nickName))
                             ) {
 
                                 nombresCogidos.child(usuario.nickName).removeValue()
                             }
+                            nombresCogidos.child(nickname).setValue(usuario.idUsuario)
                             subirUsuario()
                         } else {
                             Toast.makeText(
@@ -156,8 +158,8 @@ class EditarPerfilFragment : Fragment() {
         ) { dialog, which ->
             when (which) {
                 0 -> elegirFotoGaleria()
-                1 -> //tomarFotoCamara()
-                    Toast.makeText(activity, "Proximamente...", Toast.LENGTH_SHORT).show()
+                1 -> tomarFotoCamara()
+
             }
         }
         fotoDialogo.show()
@@ -175,25 +177,13 @@ class EditarPerfilFragment : Fragment() {
     }
 
     private fun tomarFotoCamara() {
-        try {
-
-
-            // Si queremos hacer uso de fotos en aklta calidad
-            val builder = StrictMode.VmPolicy.Builder()
-            StrictMode.setVmPolicy(builder.build())
-
-            // Eso para alta o baja
-            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-
-            // Esto para alta calidad
-            fotoUri = Uri.fromFile(this.createImageFile());
-            intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, fotoUri);
-            Log.e("foto", "d" + fotoUri)
-            // Esto para alta y baja
-            startActivityForResult(intent, CAMARA)
-        } catch (e: Exception) {
-            Toast.makeText(activity, "¡Fallito wey!", Toast.LENGTH_SHORT).show()
-        }
+        val value = ContentValues()
+        value.put(MediaStore.Images.Media.TITLE, "Imagen")
+        fotoUri =
+            activity?.contentResolver?.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, value)!!
+        val camaraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        camaraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fotoUri)
+        startActivityForResult(camaraIntent, CAMARA)
     }
 
 
@@ -214,51 +204,16 @@ class EditarPerfilFragment : Fragment() {
                         requireActivity().applicationContext.contentResolver,
                         fotoUri
                     )
-                    //guardamos en un bitmap publico el bitmap cogido
-                    // imagenFinal = bitmap
-                    //Toast.makeText(activity, "¡Foto salvada!", Toast.LENGTH_SHORT).show()
-                    //mostramos en el ImageView el bitmap seleccionado
-
-                    Picasso.get().load(fotoUri).transform(ImagenRedonda()).into(ivPerfilFoto)
-                    // imagen = bitmapToBase64(bitmap)
+                    Picasso.get().load(fotoUri).rotate(90F) .transform(ImagenRedonda()).into(ivPerfilFoto)
                 } catch (e: IOException) {
                     e.printStackTrace()
                     Toast.makeText(activity, "¡Fallo Galeria!", Toast.LENGTH_SHORT).show()
                 }
             }
         } else if (requestCode == CAMARA) {
-            Log.d("FOTO", "Entramos en Camara")
-            // Cogemos la imagen, pero podemos coger la imagen o su modo en baja calidad (thumbnail
-            var thumbnail: Bitmap? = null
-            try {
-                try {
 
+            Picasso.get().load(fotoUri).transform(ImagenRedonda()).into(ivPerfilFoto)
 
-                    // Esta línea para baja
-                    thumbnail = data!!.extras!!["data"] as Bitmap?
-                    // Esto para alta
-                    thumbnail = MediaStore.Images.Media.getBitmap(
-                        getActivity()?.getApplicationContext()?.getContentResolver(), fotoUri
-                    );
-                    Log.e("foto", "thumbnail" + fotoUri.toString())
-                    //imagenFinal = thumbnail
-                    // salvamos
-                    // path = salvarImagen(thumbnail); //  photoURI.getPath(); Podríamos poner esto, pero vamos a salvarla comprimida y borramos la no comprimida (por gusto)
-                    //mostramos en el ImageView el bitmap seleccionado
-                    //this.ivPerfilFoto.setImageBitmap(thumbnail)
-                    Picasso.get().load(fotoUri).transform(ImagenRedonda()).into(ivPerfilFoto)
-                    //imagen = bitmapToBase64(thumbnail)
-                } catch (e: java.lang.Exception) {
-                    Toast.makeText(activity, "¡Fallito wey!" + e.toString(), Toast.LENGTH_SHORT)
-                        .show()
-                }
-                // Borramos el fichero de la URI
-                //borrarFichero(photoURI.getPath());
-                Toast.makeText(activity, "¡Foto Salvada!", Toast.LENGTH_SHORT).show()
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-                Toast.makeText(activity, "¡Fallo Camara!", Toast.LENGTH_SHORT).show()
-            }
         }
     }
 
@@ -304,9 +259,7 @@ class EditarPerfilFragment : Fragment() {
     private fun guardar(fotoUrl: String) {
         val fUser: FirebaseUser = FirebaseAuth.getInstance().currentUser!!
         val currentUserDb = databaseReference.child(fUser.uid)
-
-
-        //public Usuario(String nickName, String fotoPerfil, String descripcion, int rol)
+        //se crea el usuario con los datos
         val user = Usuario(
             etEditarNickName.text.toString().trim(),
             fotoUrl,
@@ -314,6 +267,7 @@ class EditarPerfilFragment : Fragment() {
             0,
             fUser.uid.toString()
         )
+        //se guardan los cambios
         currentUserDb.setValue(user)
         Toast.makeText(activity?.baseContext, "Perfil Actualizado", Toast.LENGTH_SHORT).show()
 
@@ -326,21 +280,7 @@ class EditarPerfilFragment : Fragment() {
         transaction.commit()
     }
 
-    @Throws(IOException::class)
-    private fun createImageFile(): File {
-        // Create an image file name
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val storageDir: File = context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
 
-        return File.createTempFile(
-            "JPEG_${timeStamp}_", /* prefix */
-            ".jpg", /* suffix */
-            storageDir /* directory */
-        ).apply {
-            // Save a file: path for use with ACTION_VIEW intents
-            currentPhotoPath = absolutePath
-        }
-    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu!!, inflater)

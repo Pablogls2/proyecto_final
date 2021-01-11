@@ -4,6 +4,7 @@ import android.content.ClipData.Item
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +15,7 @@ import com.example.tenisclubdroid.ui.clases.Usuario
 import com.example.tenisclubdroid.ui.perfil.PerfilFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import kotlin.concurrent.fixedRateTimer
 
 
 /**
@@ -29,7 +31,7 @@ class ContactosFragment : Fragment() {
     private lateinit var databaseReference: DatabaseReference
     private lateinit var databaseReferenceUsuarios: DatabaseReference
     lateinit var root: View
-    var veces = 0
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,27 +50,26 @@ class ContactosFragment : Fragment() {
         lista_ids = ArrayList()
         lista_contactos = ArrayList()
 
+        //cogemos la base de datos y las referencias necesarias
         database =
             FirebaseDatabase.getInstance("https://tenisclubdroid-default-rtdb.europe-west1.firebasedatabase.app/")
 
         databaseReference = database.reference.child("Contactos")
         databaseReferenceUsuarios = database.reference.child("usuarios")
 
+        //busca las referencias de los contactos que son los propios uid de los usuarios
         val id_usuario = FirebaseAuth.getInstance().currentUser?.uid
         val referencia_usuario = databaseReference.child(id_usuario!!)
 
         referencia_usuario.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
+                //se rrecorren todos los valores
                 snapshot.children.forEach {
-
                     val id = it.getValue()
                     lista_ids.add(id.toString())
-
                 }
                 ver_contactos(lista_ids)
-
-
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -99,11 +100,11 @@ class ContactosFragment : Fragment() {
                     val nickname = snapshot.child("nickName").value.toString()
                     val fotoPerfil = snapshot.child("fotoPerfil").value.toString()
                     val idUsuario = snapshot.child("idUsuario").value.toString()
-                    val contacto = Contacto(nickname, fotoPerfil, idUsuario)
+                    val descripcion= snapshot.child("descripcion").value.toString()
+                    val contacto = Contacto(nickname, fotoPerfil, idUsuario, descripcion)
                     añadir_contacto(contacto)
 
                     if (lista_id.size == lista_contactos.size) {
-
 
                         if (root is RecyclerView) {
                             with(root) {
@@ -114,8 +115,9 @@ class ContactosFragment : Fragment() {
 
 
                                 Log.e("lista", "tamaño_contactos " + lista_contactos.size)
+                                val fm= fragmentManager
                                 (root as RecyclerView).adapter =
-                                    MyUsuarioRecyclerViewAdapter(lista_contactos)
+                                    MyUsuarioRecyclerViewAdapter(lista_contactos, fm!!)
                             }
                         }
                     }
@@ -141,13 +143,18 @@ class ContactosFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_buscar -> {
-                val buscar = BuscarContactoFragment()
+                /*val buscar = BuscarContactoFragment()
 
                 val fm = fragmentManager
                 val transaction = fm!!.beginTransaction()
                 transaction.replace(R.id.nav_host_fragment, buscar)
                 transaction.addToBackStack(null)
-                transaction.commit()
+                transaction.commit()*/
+                val toast1 = Toast.makeText(
+                    context,
+                    "proximamente...", Toast.LENGTH_SHORT
+                )
+                toast1.show()
 
             }
 

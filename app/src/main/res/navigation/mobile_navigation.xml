@@ -24,7 +24,7 @@
         tools:layout="@layout/fragment_contactos" />
     <fragment
         android:id="@+id/nav_reservar"
-        android:name="com.example.tenisclubdroid.ui.home.HomeFragment"
+        android:name="com.example.tenisclubdroid.ui.reservar.ReservarFragment"
         android:label="@string/menu_reservar"
         tools:layout="@layout/fragment_reservar" />
     <fragment

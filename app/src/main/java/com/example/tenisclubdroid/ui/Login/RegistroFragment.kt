@@ -166,9 +166,6 @@ class RegistroFragment : Fragment() {
                 Log.e("repetido", "" + dataSnapshot.child(usuario).key)
                 if (!dataSnapshot.hasChild(usuario)) {
                     // dato =dataSnapshot.child(sUsername).key.toString()
-
-                    Log.e("repetido2", dataSnapshot.child(usuario).key.toString())
-
                     FirebaseAuth.getInstance().createUserWithEmailAndPassword(
                         email,
                         contra
@@ -205,11 +202,8 @@ class RegistroFragment : Fragment() {
 
                                     }
                             }
-
                             val intent = Intent(activity, LoginActivity::class.java)
                             activity?.startActivity(intent)
-
-
                         } else {
                             val toast1 = Toast.makeText(
                                 context,
@@ -217,7 +211,6 @@ class RegistroFragment : Fragment() {
                             )
                             toast1.show()
                         }
-
 
                     }
                 }else{

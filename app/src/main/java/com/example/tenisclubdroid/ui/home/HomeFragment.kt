@@ -18,48 +18,19 @@ class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
 
-    private lateinit var databaseReference: DatabaseReference
-    private lateinit var database: FirebaseDatabase
-    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         homeViewModel =
-                ViewModelProvider(this).get(HomeViewModel::class.java)
+            ViewModelProvider(this).get(HomeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         homeViewModel.text.observe(viewLifecycleOwner, Observer {
 
         })
 
-
-       /* auth = FirebaseAuth.getInstance()
-        database = FirebaseDatabase.getInstance()
-        databaseReference = database.reference.child("usuarios")
-
-        var et = root.findViewById<TextView>(R.id.btnRegistroRegistrar)
-
-        val user = auth.currentUser
-        val usereferrence= databaseReference.child(user?.uid!!)
-
-        usereferrence.addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-
-                //et.text=snapshot.child("nickname").value.toString()
-                Log.e("snap",""+snapshot.child("nickname").value.toString())
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-        })*/
-
-
-
-
-        
         return root
     }
 }

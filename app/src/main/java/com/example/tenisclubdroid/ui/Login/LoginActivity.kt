@@ -27,6 +27,7 @@ import com.karumi.dexter.listener.DexterError
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.PermissionRequestErrorListener
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import java.util.*
 
 class LoginActivity : AppCompatActivity() {
 
@@ -48,21 +49,21 @@ class LoginActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        session()
+        cargarSesion()
         pedirMultiplesPermisos()
 
         btnLogin.setOnClickListener(View.OnClickListener {
-
+            //se comprueba que el correo y contraseña esten bien rellenos
             if (!etLoginEmail.text.toString().isEmpty() && !etLoginPassword.text.toString()
                     .isEmpty()
             ) {
 
-
+                //se accede al acceso de Firebase
                 auth.signInWithEmailAndPassword(
                     etLoginEmail.text.toString(),
                     etLoginPassword.text.toString()
                 ).addOnCompleteListener {
-
+                    //si se ha completado se guardan las preferencias y nos vamos a la pantalla principal de la app
                     if (it.isSuccessful) {
                         //Guardado de datos de sesion
                         val prefs: SharedPreferences.Editor = getSharedPreferences(
@@ -77,8 +78,13 @@ class LoginActivity : AppCompatActivity() {
                         startActivity(intent)
                         finish()
                     } else {
-                        Toast.makeText(this, "Datos incorrectos!", Toast.LENGTH_SHORT).show()
+                        //if(it.exception==null){
+                            Toast.makeText(this, "Datos incorrectos!", Toast.LENGTH_SHORT).show()
+                        //}
+
                     }
+                }.addOnFailureListener {
+                    Toast.makeText(this, "Revisa tu conexion!", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 Toast.makeText(this, "Rellene todos los campos!", Toast.LENGTH_SHORT).show()
@@ -89,7 +95,7 @@ class LoginActivity : AppCompatActivity() {
 
 
         btnLoginGoogle.setOnClickListener(View.OnClickListener {
-            //Configuracion
+
             val googleConf =
                 GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(
                     getString(
@@ -133,8 +139,6 @@ class LoginActivity : AppCompatActivity() {
         if (requestCode == GOOGLE_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
-
-
                 val account = task.getResult(ApiException::class.java)
 
                 if (account != null) {
@@ -145,22 +149,19 @@ class LoginActivity : AppCompatActivity() {
                                 //se recoge el usuario
                                 val user = FirebaseAuth.getInstance().currentUser
                                 //se cogen sus datos
-                                val nickname = user?.displayName.toString()
+                                val random = Random()
+
+                                val numerito = random.nextInt(0..100000)
+                                val nickname = user?.displayName.toString()+ numerito.toString()
                                 val id = user?.uid.toString()
                                 val foto = user?.photoUrl.toString()
-                                val u = Usuario(nickname, foto,"Tu descripcion", 0, id)
+                                val u = Usuario(nickname, foto, "Tu descripcion", 0, id)
                                 //se guarda en la base de datos
                                 FirebaseAuth.getInstance().currentUser?.let { it1 ->
                                     FirebaseDatabase.getInstance("https://tenisclubdroid-default-rtdb.europe-west1.firebasedatabase.app/")
                                         .getReference("usuarios").child(
                                             it1.uid
                                         ).setValue(u).addOnCompleteListener {
-
-                                            if (it.isSuccessful) {
-
-                                            } else {
-
-                                            }
 
                                         }
                                 }
@@ -176,13 +177,16 @@ class LoginActivity : AppCompatActivity() {
 
                 }
             } catch (e: ApiException) {
-                Toast.makeText(this, "Sale mal", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Error, revisa tu internet", Toast.LENGTH_SHORT).show()
             }
 
         }
     }
+    fun Random.nextInt(range: IntRange): Int {
+        return range.start + nextInt(range.last - range.start)
+    }
 
-    private fun session() {
+    private fun cargarSesion() {
         val prefs: SharedPreferences =
             getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
         val email = prefs.getString("email", null)

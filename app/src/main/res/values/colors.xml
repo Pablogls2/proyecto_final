@@ -12,5 +12,6 @@
     <color name="dorado">#D6DD66</color>
     <color name="verde">#83D686</color>
     <color name="rojo_google">#DB4A39</color>
+    <color name="color_twitter">#00acee</color>
     <color name="background_tint_azul">#FF0347F4</color>
 </resources>

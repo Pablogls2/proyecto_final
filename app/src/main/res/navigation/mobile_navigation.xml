@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/nav_club"
-        android:name="com.example.tenisclubdroid.ui.club.ClubFragment"
+        android:name="com.example.tenisclubdroid.ui.home.HomeFragment"
         android:label="@string/menu_club"
         tools:layout="@layout/fragment_club" />
 
@@ -26,12 +26,12 @@
         android:id="@+id/nav_reservar"
         android:name="com.example.tenisclubdroid.ui.home.HomeFragment"
         android:label="@string/menu_reservar"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_reservar" />
     <fragment
         android:id="@+id/nav_historial"
         android:name="com.example.tenisclubdroid.ui.home.HomeFragment"
         android:label="@string/menu_historial"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_club" />
     <fragment
         android:id="@+id/nav_calendario"
         android:name="com.example.tenisclubdroid.ui.home.HomeFragment"
@@ -41,5 +41,5 @@
         android:id="@+id/nav_perfil"
         android:name="com.example.tenisclubdroid.ui.perfil.PerfilFragment"
         android:label="@string/menu_perfil"
-        tools:layout="@layout/fragment_contactos" />
+        tools:layout="@layout/fragment_perfil" />
 </navigation>

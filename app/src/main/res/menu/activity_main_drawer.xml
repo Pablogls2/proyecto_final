@@ -12,25 +12,25 @@
                     android:title="@string/menu_home" />
                 <item
                     android:id="@+id/nav_club"
-                    android:icon="@mipmap/ic_club"
+                    android:icon="@drawable/ic_club"
                     android:title="@string/menu_club"
-                    android:visible="false" />
+                   />
                 <item
                     android:id="@+id/nav_contactos"
                     android:icon="@drawable/ic_contactos"
                     android:title="@string/menu_contactos" />
                 <item
                     android:id="@+id/nav_reservar"
-                    android:icon="@drawable/ic_contactos"
-                    android:title="@string/menu_contactos" />
+                    android:icon="@drawable/ic_reservar"
+                    android:title="@string/menu_reservar" />
                 <item
                     android:id="@+id/nav_historial"
                     android:icon="@drawable/ic_historial"
-                    android:title="@string/menu_contactos" />
+                    android:title="@string/menu_historial" />
                 <item
                     android:id="@+id/nav_calendario"
                     android:icon="@drawable/ic_calendario"
-                    android:title="@string/menu_contactos" />
+                    android:title="@string/menu_calendario" />
             </menu>
         </item>
     </group>

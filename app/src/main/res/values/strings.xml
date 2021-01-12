@@ -61,4 +61,6 @@
     <string name="continuar">Continuar</string>
     <string name="inicio">Hora de inicio:</string>
     <string name="final_hora">Hora final:</string>
+    <string name="precio">"Precio total: "</string>
+    <string name="metodo">Métodos de pago:</string>
 </resources>

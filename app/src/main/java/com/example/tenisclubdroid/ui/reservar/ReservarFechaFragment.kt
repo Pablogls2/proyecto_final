@@ -77,48 +77,70 @@ class ReservarFechaFragment : Fragment() {
             hora_inicio = etTimeInicio.text.toString()
             hora_final = etTimeFinal.text.toString()
 
-            val hora_inicio_valida =
-                (hora_inicio.startsWith("1:") || hora_inicio.startsWith("2:") || hora_inicio.startsWith(
-                    "3"
-                ) || hora_inicio.startsWith("4:") || hora_inicio.startsWith("5:") || hora_inicio.startsWith(
-                    "6:"
-                ) || hora_inicio.startsWith("7:") || hora_inicio.startsWith("8:") || hora_inicio.startsWith(
-                    "9:"
-                ))
-            val hora_final_valida =
-                (hora_final.startsWith("1:") || hora_final.startsWith("2:") || hora_final.startsWith("3:") || hora_final.startsWith(
-                    "4:"
-                ) || hora_final.startsWith("5:") || hora_final.startsWith("6:") || hora_final.startsWith(
-                    "7:"
-                ) || hora_final.startsWith("8:") || hora_final.startsWith("9:"))
-            if (hora_inicio_valida || hora_final_valida) {
-                Toast.makeText(
-                    activity?.baseContext,
-                    "Nuestro horario es de 10:00 a 19:00",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
+            if (!hora_inicio.equals("Hora de inicio:") && !hora_final.equals("Hora final:")) {
 
-                /*if (hora_inicio.length < 5) {
-                    hora_inicio = hora_inicio + "0"
-                }
-                if (hora_final.length < 5) {
-                    hora_final = hora_final + "0"
-                }*/
 
-                hora_inicio= hora_inicio.substring(0,3) + "00"
-                hora_final= hora_final.substring(0,3) + "00"
-
-                val horaInicio = LocalTime.parse(hora_inicio)
-                val horaFinal = LocalTime.parse(hora_final)
-                if (horaInicio.isAfter(horaFinal) || horaInicio.equals(horaFinal)) {
-                    Toast.makeText(activity?.baseContext, "Revise las horas ", Toast.LENGTH_SHORT)
-                        .show()
+                val hora_inicio_valida =
+                    (hora_inicio.startsWith("1:") || hora_inicio.startsWith("2:") || hora_inicio.startsWith(
+                        "3"
+                    ) || hora_inicio.startsWith("4:") || hora_inicio.startsWith("5:") || hora_inicio.startsWith(
+                        "6:"
+                    ) || hora_inicio.startsWith("7:") || hora_inicio.startsWith("8:") || hora_inicio.startsWith(
+                        "9:"
+                    ) || hora_inicio.startsWith("20:") || hora_inicio.startsWith("21:") || hora_inicio.startsWith(
+                        "22:"
+                    ) || hora_inicio.startsWith("23:") || hora_inicio.startsWith("0:"))
+                val hora_final_valida =
+                    (hora_final.startsWith("1:") || hora_final.startsWith("2:") || hora_final.startsWith(
+                        "3:"
+                    ) || hora_final.startsWith(
+                        "4:"
+                    ) || hora_final.startsWith("5:") || hora_final.startsWith("6:") || hora_final.startsWith(
+                        "7:"
+                    ) || hora_final.startsWith("8:") || hora_final.startsWith("9:") || hora_final.startsWith(
+                        "20:"
+                    ) || hora_final.startsWith("21:") || hora_final.startsWith("22:") || hora_final.startsWith(
+                        "23:"
+                    ) || hora_final.startsWith("0:"))
+                if (hora_inicio_valida || hora_final_valida) {
+                    Toast.makeText(
+                        activity?.baseContext,
+                        "Nuestro horario es de 10:00 a 19:00",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } else {
-                    val fecha_elegida = fecha + "/" + hora_inicio + "-" + hora_final
-                    Toast.makeText(activity?.baseContext, fecha_elegida, Toast.LENGTH_SHORT)
-                        .show()
+
+
+                    val horaInicio = LocalTime.parse(hora_inicio)
+                    val horaFinal = LocalTime.parse(hora_final)
+                    if (horaInicio.isAfter(horaFinal) || horaInicio.equals(horaFinal)) {
+                        Toast.makeText(
+                            activity?.baseContext,
+                            "Revise las horas ",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    } else {
+
+                        val reservar_pago = ReservarPagoFragment.newInstance(reserva)
+
+                        val fm = fragmentManager
+                        val transaction = fm!!.beginTransaction()
+                        transaction.replace(R.id.nav_host_fragment, reservar_pago)
+                        transaction.addToBackStack(null)
+                        transaction.commit()
+
+
+
+
+                        val fecha_elegida = fecha + "/" + hora_inicio + "-" + hora_final
+                        Toast.makeText(activity?.baseContext, fecha_elegida, Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 }
+            }else{
+                Toast.makeText(activity?.baseContext, "por favor elige el horario", Toast.LENGTH_SHORT)
+                    .show()
             }
 
 
@@ -271,7 +293,7 @@ class ReservarFechaFragment : Fragment() {
     }
 
     private fun onTimeSelected(time: String) {
-        etTimeInicio.setText(time)
+        etTimeInicio.setText(time.substring(0, 3) + "00")
     }
 
     private fun showTimePickerDialog2() {
@@ -280,6 +302,6 @@ class ReservarFechaFragment : Fragment() {
     }
 
     private fun onTimeSelected2(time: String) {
-        etTimeFinal.setText(time)
+        etTimeFinal.setText(time.substring(0, 3) + "00")
     }
 }

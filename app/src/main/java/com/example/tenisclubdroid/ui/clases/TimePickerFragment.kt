@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.TimePicker
 import androidx.fragment.app.DialogFragment
+import com.example.tenisclubdroid.R
 import java.util.*
 
 class TimePickerFragment(val listener:(String) -> Unit) : DialogFragment(), TimePickerDialog.OnTimeSetListener {

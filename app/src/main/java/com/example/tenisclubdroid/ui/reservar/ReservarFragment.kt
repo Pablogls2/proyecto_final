@@ -19,16 +19,16 @@ import com.squareup.picasso.Picasso
 
 class ReservarFragment : Fragment() {
 
-    lateinit var root :View
+    lateinit var root: View
 
     lateinit var lista_pistas: ArrayList<Pista>
-    lateinit var spinner : Spinner
-    lateinit var check_luces : CheckBox
-    lateinit var check_limpieza : CheckBox
-    lateinit var tvReservarExtra1 : TextView
-    lateinit var tvReservarExtra2 : TextView
-    lateinit var btnContinuar : Button
-    lateinit var ivReservarFoto : ImageView
+    lateinit var spinner: Spinner
+    lateinit var check_luces: CheckBox
+    lateinit var check_limpieza: CheckBox
+    lateinit var tvReservarExtra1: TextView
+    lateinit var tvReservarExtra2: TextView
+    lateinit var btnContinuar: Button
+    lateinit var ivReservarFoto: ImageView
 
     lateinit var pista_elegida: Pista
 
@@ -40,8 +40,8 @@ class ReservarFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if(savedInstanceState?.getSerializable("pista") != null){
-            pista_elegida= savedInstanceState?.getSerializable("pista") as Pista
+        if (savedInstanceState?.getSerializable("pista") != null) {
+            pista_elegida = savedInstanceState?.getSerializable("pista") as Pista
         }
 
 
@@ -52,17 +52,17 @@ class ReservarFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        root= inflater.inflate(R.layout.fragment_reservar, container, false)
+        root = inflater.inflate(R.layout.fragment_reservar, container, false)
 
-        spinner= root.findViewById<Spinner>(R.id.spinnerReservar)
-        check_limpieza= root.findViewById<CheckBox>(R.id.cbReservar1)
-        check_luces= root.findViewById<CheckBox>(R.id.cbReservar2)
+        spinner = root.findViewById<Spinner>(R.id.spinnerReservar)
+        check_limpieza = root.findViewById<CheckBox>(R.id.cbReservar1)
+        check_luces = root.findViewById<CheckBox>(R.id.cbReservar2)
         tvReservarExtra1 = root.findViewById<TextView>(R.id.tvReservarExtra1)
-        tvReservarExtra2= root.findViewById<TextView>(R.id.tvReservarExtra2)
-        ivReservarFoto= root.findViewById<ImageView>(R.id.ivReservarFoto)
+        tvReservarExtra2 = root.findViewById<TextView>(R.id.tvReservarExtra2)
+        ivReservarFoto = root.findViewById<ImageView>(R.id.ivReservarFoto)
 
-        btnContinuar= root.findViewById<Button>(R.id.btnReservaContinuar)
-
+        btnContinuar = root.findViewById<Button>(R.id.btnReservaContinuar)
+        pista_elegida= Pista(null,null,0,null)
 
         lista_pistas = ArrayList()
 
@@ -104,27 +104,31 @@ class ReservarFragment : Fragment() {
         btnContinuar.setOnClickListener(View.OnClickListener {
             val fm = fragmentManager
 
-            //public Reserva(Pista pista, ArrayList<String> extras, String idReservador)
-            val lista_extras = ArrayList<Int>()
+            if (pista_elegida.nombre!=null) {
 
-            if(check_limpieza.isChecked){
-                lista_extras.add(pista_elegida.extras.get(0))
+
+                val lista_extras = ArrayList<Int>()
+
+                if (check_limpieza.isChecked) {
+                    lista_extras.add(pista_elegida.extras.get(0))
+                }
+                if (check_luces.isChecked) {
+                    lista_extras.add(pista_elegida.extras.get(1))
+                }
+                val idReservador = FirebaseAuth.getInstance().uid.toString()
+
+                val reserva = Reserva(pista_elegida, lista_extras, idReservador)
+
+
+                val reservar_fecha = ReservarFechaFragment.newInstance(reserva)
+
+                val transaction = fm!!.beginTransaction()
+                transaction.replace(R.id.nav_host_fragment, reservar_fecha)
+                transaction.addToBackStack(null)
+                transaction.commit()
+            }else{
+                Toast.makeText(activity?.baseContext, "elige una pista!", Toast.LENGTH_SHORT).show()
             }
-            if(check_luces.isChecked){
-                lista_extras.add(pista_elegida.extras.get(1))
-            }
-            val idReservador = FirebaseAuth.getInstance().uid.toString()
-
-            val reserva= Reserva(pista_elegida,lista_extras,idReservador)
-
-
-            val reservar_fecha = ReservarFechaFragment.newInstance(reserva)
-
-            val transaction = fm!!.beginTransaction()
-            transaction.replace(R.id.nav_host_fragment, reservar_fecha)
-            transaction.addToBackStack(null)
-            transaction.commit()
-
 
         })
 
@@ -132,12 +136,12 @@ class ReservarFragment : Fragment() {
 
     }
 
-    private fun iniciar(){
+    private fun iniciar() {
 
-        val lista_nombres = ArrayList<String> ()
+        val lista_nombres = ArrayList<String>()
         lista_nombres.add("             ")
-        var i =0
-        for (nombre in lista_pistas){
+        var i = 0
+        for (nombre in lista_pistas) {
             lista_nombres.add(lista_pistas.get(i).nombre)
             i++
         }
@@ -150,7 +154,7 @@ class ReservarFragment : Fragment() {
             )
         )
 
-        spinner.onItemSelectedListener= object : AdapterView.OnItemSelectedListener{
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
@@ -161,20 +165,42 @@ class ReservarFragment : Fragment() {
                 //se hace un switch dependiendo de lo seleccionado
                 val seleccion = spinner.getSelectedItem() as String
 
-                when (seleccion){
-                    lista_nombres.get(1)-> {
-                        tvReservarExtra1.setText("Limpieza: "+ " "+lista_pistas.get(0).extras.get(0).toString() + " €")
-                        tvReservarExtra2.setText("Luces: " + " "+lista_pistas.get(0).extras.get(1).toString() + " €")
+                when (seleccion) {
+                    lista_nombres.get(1) -> {
+                        tvReservarExtra1.setText(
+                            "Limpieza: " + " " + lista_pistas.get(0).extras.get(
+                                0
+                            ).toString() + " €"
+                        )
+                        tvReservarExtra2.setText(
+                            "Luces: " + " " + lista_pistas.get(0).extras.get(1).toString() + " €"
+                        )
                         Picasso.get().load(lista_pistas.get(0).foto).into(ivReservarFoto)
-                        pista_elegida= Pista(lista_pistas.get(0).foto,lista_pistas.get(0).nombre,lista_pistas.get(0).precio,lista_pistas.get(0).extras)
+                        pista_elegida = Pista(
+                            lista_pistas.get(0).foto,
+                            lista_pistas.get(0).nombre,
+                            lista_pistas.get(0).precio,
+                            lista_pistas.get(0).extras
+                        )
 
 
                     }
-                    lista_nombres.get(2)->{
-                        tvReservarExtra1.setText("Limpieza: " + " "+lista_pistas.get(1).extras.get(0).toString() + " €")
-                        tvReservarExtra2.setText("Luces" + " "+lista_pistas.get(1).extras.get(1).toString() + " €")
+                    lista_nombres.get(2) -> {
+                        tvReservarExtra1.setText(
+                            "Limpieza: " + " " + lista_pistas.get(1).extras.get(
+                                0
+                            ).toString() + " €"
+                        )
+                        tvReservarExtra2.setText(
+                            "Luces" + " " + lista_pistas.get(1).extras.get(1).toString() + " €"
+                        )
                         Picasso.get().load(lista_pistas.get(1).foto).into(ivReservarFoto)
-                        pista_elegida= Pista(lista_pistas.get(1).foto,lista_pistas.get(1).nombre,lista_pistas.get(1).precio,lista_pistas.get(1).extras)
+                        pista_elegida = Pista(
+                            lista_pistas.get(1).foto,
+                            lista_pistas.get(1).nombre,
+                            lista_pistas.get(1).precio,
+                            lista_pistas.get(1).extras
+                        )
 
                     }
                 }
@@ -187,16 +213,12 @@ class ReservarFragment : Fragment() {
         }
 
 
-
-
-
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        if(pista_elegida!=null){
-            outState.putSerializable("pista",pista_elegida)
+        if (pista_elegida != null) {
+            outState.putSerializable("pista", pista_elegida)
         }
 
     }

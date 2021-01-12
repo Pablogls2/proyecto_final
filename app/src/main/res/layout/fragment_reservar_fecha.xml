@@ -9,6 +9,21 @@
     android:backgroundTint="@color/background"
     tools:context=".ui.reservar.ReservarFechaFragment" >
 
+    <TextView
+        android:id="@+id/tvReservarHoraFinal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="@string/final_hora"
+        android:textColor="@color/blanco"
+        app:layout_constraintBottom_toTopOf="@+id/btnReservarFechaContinuar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView7"
+        app:layout_constraintVertical_bias="0.381" />
+
     <Button
         android:id="@+id/btnReservarFechaContinuar"
         android:layout_width="198dp"
@@ -31,23 +46,12 @@
         android:textColor="@color/blanco"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerReservarFechaHora2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerReservarFechaHora1"
-        app:layout_constraintVertical_bias="0.351" />
-
-    <Spinner
-        android:id="@+id/spinnerReservarFechaHora2"
-        android:layout_width="266dp"
-        android:layout_height="32dp"
-        android:background="@color/gris"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.438"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerReservarFechaHora1"
-        app:layout_constraintVertical_bias="0.186" />
+        app:layout_constraintTop_toBottomOf="@+id/tvReservarHoraInicial"
+        app:layout_constraintVertical_bias="0.101" />
 
     <CalendarView
         android:id="@+id/calendarReservarFecha"
@@ -62,19 +66,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.058" />
 
-    <Spinner
-        android:id="@+id/spinnerReservarFechaHora1"
-        android:layout_width="266dp"
-        android:layout_height="32dp"
-        android:background="@color/gris"
-        android:backgroundTint="@color/gris"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calendarReservarFecha"
-        app:layout_constraintVertical_bias="0.235" />
-
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
@@ -83,24 +74,26 @@
         android:textColor="@color/blanco"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerReservarFechaHora1"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.464"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calendarReservarFecha" />
+        app:layout_constraintTop_toBottomOf="@+id/calendarReservarFecha"
+        app:layout_constraintVertical_bias="0.062" />
 
-    <EditText
-        android:id="@+id/editHora1"
+    <TextView
+        android:id="@+id/tvReservarHoraInicial"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name"
+        android:text="@string/inicio"
         android:textColor="@color/blanco"
         app:layout_constraintBottom_toTopOf="@+id/btnReservarFechaContinuar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerReservarFechaHora2"
-        app:layout_constraintVertical_bias="0.242" />
+        app:layout_constraintTop_toBottomOf="@+id/textView5"
+        app:layout_constraintVertical_bias="0.135" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

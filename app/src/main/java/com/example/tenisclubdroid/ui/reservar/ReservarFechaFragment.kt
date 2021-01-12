@@ -1,5 +1,6 @@
 package com.example.tenisclubdroid.ui.reservar
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,12 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.annotation.RequiresApi
 import com.example.tenisclubdroid.R
-import com.example.tenisclubdroid.ui.clases.Pista
 import com.example.tenisclubdroid.ui.clases.Reserva
 import com.example.tenisclubdroid.ui.clases.TimePickerFragment
-import com.example.tenisclubdroid.ui.clases.Usuario
-import com.squareup.picasso.Picasso
+import java.time.LocalDate
+import java.time.LocalTime
 import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -27,15 +28,14 @@ private const val ARG_PARAM2 = "param2"
  */
 class ReservarFechaFragment : Fragment() {
 
-    lateinit var reserva : Reserva
+    lateinit var reserva: Reserva
     lateinit var root: View
-    lateinit var calendarioReserva : CalendarView
-    lateinit var fecha : String
-    lateinit var spinnerHoraInicio : Spinner
-    lateinit var spinnerHoraFinal: Spinner
+    lateinit var calendarioReserva: CalendarView
+    lateinit var fecha: String
     lateinit var hora_inicio: String
     lateinit var hora_final: String
-    lateinit var etTimeInicio : EditText
+    lateinit var etTimeInicio: TextView
+    lateinit var etTimeFinal: TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,28 +46,85 @@ class ReservarFechaFragment : Fragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        root= inflater.inflate(R.layout.fragment_reservar_fecha, container, false)
+        root = inflater.inflate(R.layout.fragment_reservar_fecha, container, false)
+        calendarioReserva = root.findViewById<CalendarView>(R.id.calendarReservarFecha)
+        etTimeInicio = root.findViewById<TextView>(R.id.tvReservarHoraInicial)
+        etTimeFinal = root.findViewById<TextView>(R.id.tvReservarHoraFinal)
+        val btnReservaFechaContinuar = root.findViewById<Button>(R.id.btnReservarFechaContinuar)
+        fecha = ""
 
-        calendarioReserva= root.findViewById<CalendarView>(R.id.calendarReservarFecha)
-        fecha=""
 
-
-        calendarioReserva.setOnDateChangeListener(CalendarView.OnDateChangeListener{_,year  , month, dayOfMonth  ->
-             fecha =dayOfMonth.toString() + "-" + (month +1) +"-"+ year
-            Log.e("fecha",fecha)
+        calendarioReserva.setOnDateChangeListener(CalendarView.OnDateChangeListener { _, year, month, dayOfMonth ->
+            fecha = dayOfMonth.toString() + "-" + (month + 1) + "-" + year
+            Log.e("fecha", fecha)
         })
 
-        rellenar_horas()
-        etTimeInicio= root.findViewById<EditText>(R.id.editHora1)
 
-        etTimeInicio.setOnClickListener { showTimePickerDialog()}
 
-        Log.e("reserva", " "+ reserva.toString())
+
+        etTimeInicio.setOnClickListener { showTimePickerDialog() }
+        etTimeFinal.setOnClickListener { showTimePickerDialog2() }
+
+
+        btnReservaFechaContinuar.setOnClickListener(View.OnClickListener {
+
+            hora_inicio = etTimeInicio.text.toString()
+            hora_final = etTimeFinal.text.toString()
+
+            val hora_inicio_valida =
+                (hora_inicio.startsWith("1:") || hora_inicio.startsWith("2:") || hora_inicio.startsWith(
+                    "3"
+                ) || hora_inicio.startsWith("4:") || hora_inicio.startsWith("5:") || hora_inicio.startsWith(
+                    "6:"
+                ) || hora_inicio.startsWith("7:") || hora_inicio.startsWith("8:") || hora_inicio.startsWith(
+                    "9:"
+                ))
+            val hora_final_valida =
+                (hora_final.startsWith("1:") || hora_final.startsWith("2:") || hora_final.startsWith("3:") || hora_final.startsWith(
+                    "4:"
+                ) || hora_final.startsWith("5:") || hora_final.startsWith("6:") || hora_final.startsWith(
+                    "7:"
+                ) || hora_final.startsWith("8:") || hora_final.startsWith("9:"))
+            if (hora_inicio_valida || hora_final_valida) {
+                Toast.makeText(
+                    activity?.baseContext,
+                    "Nuestro horario es de 10:00 a 19:00",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+
+                /*if (hora_inicio.length < 5) {
+                    hora_inicio = hora_inicio + "0"
+                }
+                if (hora_final.length < 5) {
+                    hora_final = hora_final + "0"
+                }*/
+
+                hora_inicio= hora_inicio.substring(0,3) + "00"
+                hora_final= hora_final.substring(0,3) + "00"
+
+                val horaInicio = LocalTime.parse(hora_inicio)
+                val horaFinal = LocalTime.parse(hora_final)
+                if (horaInicio.isAfter(horaFinal) || horaInicio.equals(horaFinal)) {
+                    Toast.makeText(activity?.baseContext, "Revise las horas ", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    val fecha_elegida = fecha + "/" + hora_inicio + "-" + hora_final
+                    Toast.makeText(activity?.baseContext, fecha_elegida, Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+
+
+        })
+
+        Log.e("reserva", " " + reserva.toString())
         return root;
     }
 
@@ -75,15 +132,15 @@ class ReservarFechaFragment : Fragment() {
 
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(reserva : Reserva) =
+        fun newInstance(reserva: Reserva) =
             ReservarFechaFragment().apply {
                 arguments = Bundle().apply {
-                   putSerializable("reserva",reserva)
+                    putSerializable("reserva", reserva)
                 }
             }
     }
 
-    private fun rellenar_horas(){
+    /*private fun rellenar_horas(){
         spinnerHoraInicio= root.findViewById<Spinner>(R.id.spinnerReservarFechaHora1)
         spinnerHoraFinal = root.findViewById<Spinner>(R.id.spinnerReservarFechaHora2)
 
@@ -205,14 +262,24 @@ class ReservarFechaFragment : Fragment() {
 
             }
         }
-    }
+    }*/
 
     private fun showTimePickerDialog() {
         val timePicker = TimePickerFragment { onTimeSelected(it) }
         timePicker.show(requireActivity().supportFragmentManager, "timePicker")
+
     }
 
     private fun onTimeSelected(time: String) {
         etTimeInicio.setText(time)
+    }
+
+    private fun showTimePickerDialog2() {
+        val timePicker = TimePickerFragment { onTimeSelected2(it) }
+        timePicker.show(requireActivity().supportFragmentManager, "timePicker")
+    }
+
+    private fun onTimeSelected2(time: String) {
+        etTimeFinal.setText(time)
     }
 }

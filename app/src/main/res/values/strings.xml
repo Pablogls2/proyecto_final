@@ -59,4 +59,6 @@
     <string name="pista_extra">Extras:</string>
     <string name="contrincante">Contrincante:</string>
     <string name="continuar">Continuar</string>
+    <string name="inicio">Hora de inicio:</string>
+    <string name="final_hora">Hora final:</string>
 </resources>

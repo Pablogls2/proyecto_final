@@ -1,8 +1,9 @@
 package com.example.tenisclubdroid.ui.clases;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Pista {
+public class Pista implements Serializable {
     private String foto,nombre;
     private int precio;
     private ArrayList<Integer> extras;

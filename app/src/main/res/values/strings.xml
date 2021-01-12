@@ -63,4 +63,10 @@
     <string name="final_hora">Hora final:</string>
     <string name="precio">"Precio total: "</string>
     <string name="metodo">Métodos de pago:</string>
+    <string name="pago">Visa/MasterCard</string>
+    <string name="tarjeta">Numero de tarjeta</string>
+    <string name="csv">csv</string>
+    <string name="fecha_validez">Fecha validez</string>
+    <string name="pagar">Pagar</string>
+    <string name="paypal">PayPal</string>
 </resources>

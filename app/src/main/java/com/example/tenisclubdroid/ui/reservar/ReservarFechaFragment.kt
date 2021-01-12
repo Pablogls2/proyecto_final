@@ -62,7 +62,7 @@ class ReservarFechaFragment : Fragment() {
 
         calendarioReserva.setOnDateChangeListener(CalendarView.OnDateChangeListener { _, year, month, dayOfMonth ->
             fecha = dayOfMonth.toString() + "-" + (month + 1) + "-" + year
-            Log.e("fecha", fecha)
+            Log.e("fecha", fecha.length.toString())
         })
 
 
@@ -122,6 +122,13 @@ class ReservarFechaFragment : Fragment() {
                             .show()
                     } else {
 
+                        if(fecha.length<10){
+                            fecha= fecha.substring(0,3)+ "0" + fecha.substring(3,9)
+                            Log.e("fecha_nueva"," "+ fecha)
+                        }
+                        val fecha_elegida = fecha + "/" + hora_inicio + "-" + hora_final
+                        reserva.fecha=fecha_elegida
+
                         val reservar_pago = ReservarPagoFragment.newInstance(reserva)
 
                         val fm = fragmentManager
@@ -133,9 +140,8 @@ class ReservarFechaFragment : Fragment() {
 
 
 
-                        val fecha_elegida = fecha + "/" + hora_inicio + "-" + hora_final
-                        Toast.makeText(activity?.baseContext, fecha_elegida, Toast.LENGTH_SHORT)
-                            .show()
+
+
                     }
                 }
             }else{

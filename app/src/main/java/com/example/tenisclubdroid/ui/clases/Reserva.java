@@ -2,15 +2,14 @@ package com.example.tenisclubdroid.ui.clases;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Reserva implements Serializable {
 
     private Pista pista;
     private ArrayList<Integer > extras;
-    private String idReservador,idAdversario,idReserva;
+    private String idReservador,idAdversario,idReserva,fecha;
     private int precio;
-    private Date fecha;
+
 
     public Reserva(Pista pista) {
         this.pista = pista;
@@ -29,14 +28,14 @@ public class Reserva implements Serializable {
         this.idAdversario = idAdversario;
     }
 
-    public Reserva(Pista pista, ArrayList<Integer> extras, String idReservador, Date fecha) {
+    public Reserva(Pista pista,String fecha, ArrayList<Integer> extras, String idReservador) {
         this.pista = pista;
         this.extras = extras;
         this.idReservador = idReservador;
         this.fecha = fecha;
     }
 
-    public Reserva(Pista pista, ArrayList<Integer> extras, String idReservador, String idAdversario, Date fecha) {
+    public Reserva(Pista pista, ArrayList<Integer> extras, String idReservador, String idAdversario, String fecha) {
         this.pista = pista;
         this.extras = extras;
         this.idReservador = idReservador;
@@ -44,7 +43,7 @@ public class Reserva implements Serializable {
         this.fecha = fecha;
     }
 
-    public Reserva(Pista pista, ArrayList<Integer> extras, String idReservador, String idAdversario, String idReserva, Date fecha) {
+    public Reserva(Pista pista, ArrayList<Integer> extras, String idReservador, String idAdversario, String idReserva, String  fecha) {
         this.pista = pista;
         this.extras = extras;
         this.idReservador = idReservador;
@@ -56,7 +55,8 @@ public class Reserva implements Serializable {
 
 
 
-    public Reserva(Pista pista, ArrayList<String> Integer, String idReservador, String idAdversario, String idReserva, int precio, Date fecha) {
+
+    public Reserva(Pista pista, ArrayList<Integer> extras, String idReservador, String idAdversario, String idReserva, int precio, String fecha) {
         this.pista = pista;
         this.extras = extras;
         this.idReservador = idReservador;
@@ -114,11 +114,11 @@ public class Reserva implements Serializable {
         this.precio = precio;
     }
 
-    public Date getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
 }

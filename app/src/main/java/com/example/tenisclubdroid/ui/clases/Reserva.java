@@ -121,4 +121,17 @@ public class Reserva implements Serializable {
     public void setFecha(String fecha) {
         this.fecha = fecha;
     }
+
+    @Override
+    public String toString() {
+        return "Reserva{" +
+                "pista=" + pista +
+                ", extras=" + extras +
+                ", idReservador='" + idReservador + '\'' +
+                ", idAdversario='" + idAdversario + '\'' +
+                ", idReserva='" + idReserva + '\'' +
+                ", fecha='" + fecha + '\'' +
+                ", precio=" + precio +
+                '}';
+    }
 }

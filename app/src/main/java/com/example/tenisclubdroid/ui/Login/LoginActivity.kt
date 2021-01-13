@@ -41,11 +41,12 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        var btnLogin = this.findViewById<Button>(R.id.btnRegistroRegistrar)
-        var btnRegistro = this.findViewById<Button>(R.id.btnLoginRegistro)
-        var etLoginEmail = this.findViewById<EditText>(R.id.etLoginEmail)
-        var etLoginPassword = this.findViewById<EditText>(R.id.etRegistroContra)
-        var btnLoginGoogle = this.findViewById<Button>(R.id.btnLoginGoogle)
+        //declaraciones
+        val btnLogin = this.findViewById<Button>(R.id.btnRegistroRegistrar)
+        val btnRegistro = this.findViewById<Button>(R.id.btnLoginRegistro)
+        val etLoginEmail = this.findViewById<EditText>(R.id.etLoginEmail)
+        val etLoginPassword = this.findViewById<EditText>(R.id.etRegistroContra)
+        val btnLoginGoogle = this.findViewById<Button>(R.id.btnLoginGoogle)
         val btnLoginNuevaContra = this.findViewById<Button>(R.id.btnLoginNuevaContra)
         progressBarLogin= this.findViewById<ProgressBar>(R.id.progressBarLogin)
         auth = FirebaseAuth.getInstance()

@@ -8,6 +8,10 @@ public class Pista implements Serializable {
     private int precio;
     private ArrayList<Integer> extras;
 
+
+    public Pista() {
+    }
+
     public Pista(String foto, String nombre, int precio, ArrayList<Integer> extras) {
         this.foto = foto;
         this.nombre = nombre;

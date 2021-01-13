@@ -30,8 +30,13 @@ class ReservarFragment : Fragment() {
     lateinit var tvReservarExtra2: TextView
     lateinit var btnContinuar: Button
     lateinit var ivReservarFoto: ImageView
+    lateinit var tvReservarContricante : TextView
 
-    lateinit var pista_elegida: Pista
+
+     var  nombre_adversario=""
+     var id_adversario=""
+
+     var pista_elegida= Pista()
 
 
     private lateinit var database: FirebaseDatabase
@@ -40,11 +45,18 @@ class ReservarFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (arguments?.getSerializable("pista") != null) {
 
-        if (savedInstanceState?.getSerializable("pista") != null) {
-            pista_elegida = savedInstanceState?.getSerializable("pista") as Pista
+
+            arguments?.getSerializable("pista").let {
+                pista_elegida = it as Pista
+            }
+            nombre_adversario = arguments?.getString("nombreAdver").toString()
+            id_adversario = arguments?.getString("idAdver").toString()
+
+
+
         }
-
 
     }
 
@@ -62,11 +74,20 @@ class ReservarFragment : Fragment() {
         tvReservarExtra2 = root.findViewById<TextView>(R.id.tvReservarExtra2)
         ivReservarFoto = root.findViewById<ImageView>(R.id.ivReservarFoto)
         btnContinuar = root.findViewById<Button>(R.id.btnReservaContinuar)
+        tvReservarContricante= root.findViewById<TextView>(R.id.tvReservarContrincante)
         val ibReservarAdversario = root.findViewById<ImageButton>(R.id.ibReservarContrincante)
 
+        if (pista_elegida.nombre!=null) {
 
-        pista_elegida= Pista(null,null,0,null)
+            Picasso.get().load(pista_elegida.foto).into(ivReservarFoto)
+            tvReservarExtra1.setText(
+                "Limpieza: " + " " + pista_elegida.extras.get(0).toString() + " €"
+            )
+            tvReservarExtra2.setText("Luz: " + " " + pista_elegida.extras.get(1).toString() + " €")
 
+            tvReservarContricante.setText(nombre_adversario)
+
+        }
 
         lista_pistas = ArrayList()
 
@@ -109,7 +130,7 @@ class ReservarFragment : Fragment() {
         btnContinuar.setOnClickListener(View.OnClickListener {
             val fm = fragmentManager
 
-            if (pista_elegida.nombre!=null) {
+            if (pista_elegida.nombre != null) {
 
 
                 val lista_extras = ArrayList<Int>()
@@ -124,14 +145,17 @@ class ReservarFragment : Fragment() {
 
                 val reserva = Reserva(pista_elegida, lista_extras, idReservador)
 
-
+                if(!id_adversario.isEmpty()){
+                    reserva.idAdversario=id_adversario
+                }
+                Log.e("reserva",reserva.toString())
                 val reservar_fecha = ReservarFechaFragment.newInstance(reserva)
 
                 val transaction = fm!!.beginTransaction()
                 transaction.replace(R.id.nav_host_fragment, reservar_fecha)
                 transaction.addToBackStack(null)
                 transaction.commit()
-            }else{
+            } else {
                 Toast.makeText(activity?.baseContext, "elige una pista!", Toast.LENGTH_SHORT).show()
             }
 
@@ -139,18 +163,33 @@ class ReservarFragment : Fragment() {
 
         ibReservarAdversario.setOnClickListener(View.OnClickListener {
 
-            val buscarAdversario = BuscarContactoFragment()
-            val fm = fragmentManager
-            val transaction = fm!!.beginTransaction()
-            transaction.replace(R.id.nav_host_fragment, buscarAdversario)
-            transaction.addToBackStack(null)
-            transaction.commit()
+            if (pista_elegida.nombre != null) {
+                Log.e("sd","adsfsdfsdfsdf")
+                val buscarAdversario = BuscarContactoFragment.newInstance(pista_elegida)
+                val fm = fragmentManager
+                val transaction = fm!!.beginTransaction()
+                transaction.replace(R.id.nav_host_fragment, buscarAdversario)
+                transaction.addToBackStack(null)
+                transaction.commit()
+
+            } else {
+                Toast.makeText(activity?.baseContext, "Elige una pista", Toast.LENGTH_SHORT).show()
+                /*val buscarAdversario = BuscarContactoFragment()
+                val fm = fragmentManager
+                val transaction = fm!!.beginTransaction()
+                transaction.replace(R.id.nav_host_fragment, buscarAdversario)
+                transaction.addToBackStack(null)
+                transaction.commit()*/
+            }
 
 
         })
+
+
         return root;
 
     }
+
     //se rellena el spinner con las pistas
     private fun iniciar() {
 
@@ -231,11 +270,17 @@ class ReservarFragment : Fragment() {
 
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        if (pista_elegida != null) {
-            outState.putSerializable("pista", pista_elegida)
-        }
+    companion object {
 
+        // TODO: Rename and change types and number of parameters
+        @JvmStatic
+        fun newInstance(pista: Pista, nombreAdver: String, idAdver: String) =
+            ReservarFragment().apply {
+                arguments = Bundle().apply {
+                    putSerializable("pista", pista)
+                    putString("nombreAdver", nombreAdver)
+                    putString("idAdver", idAdver)
+                }
+            }
     }
 }

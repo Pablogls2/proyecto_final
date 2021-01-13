@@ -1,5 +1,6 @@
 package com.example.tenisclubdroid.ui.reservar
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,7 +11,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.example.tenisclubdroid.MainActivity
 import com.example.tenisclubdroid.R
+import com.example.tenisclubdroid.ui.Login.LoginActivity
 import com.example.tenisclubdroid.ui.clases.Reserva
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -78,10 +81,13 @@ class ReservarPagoFragment : Fragment() {
                 reserva.idReserva=idReserva
 
                 databaseReference.child(idReserva).setValue(reserva).addOnCompleteListener {
-                    Toast.makeText(requireContext(),"Pista Reservada!",Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(),"Pista Reservada!",Toast.LENGTH_SHORT).show()
+                    //requireActivity().onBackPressed()
+                    val intent = Intent(activity, MainActivity::class.java)
+                    activity?.startActivity(intent)
                 }
             }else{
-                Toast.makeText(requireContext(),"Compruebe los datos de la tarjeta",Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(),"Compruebe los datos de la tarjeta",Toast.LENGTH_SHORT).show()
             }
 
 

@@ -296,7 +296,7 @@ class ReservarFechaFragment : Fragment() {
 
                         //para cuando el usuario meta 15:00 y 19:00
                         if(hora_inicio.equals(h1) || (hora_final.equals(h2))) {
-                            Toast.makeText(activity?.baseContext, "horas en uso", Toast.LENGTH_SHORT).show()
+                            toastHoras()
                         }else{
                             //para trabajar con las horas las pasamos al tipo de objeto de LocalTime
                             val horaInicioBBDDLocal = LocalTime.parse(h1)
@@ -307,27 +307,27 @@ class ReservarFechaFragment : Fragment() {
 
                             //cuando meta 14:00 y 16:00
                             if(horaInicio.isBefore(horaInicioBBDDLocal) && horaFinal.isAfter(horaInicioBBDDLocal) ){
-                                Toast.makeText(activity?.baseContext, "horas en uso", Toast.LENGTH_SHORT).show()
+                                toastHoras()
                             }else{
                                 //cuando meta 14:00 y 20:00
                                 if(horaInicio.isBefore(horaFinalBBDDLocal) && horaFinal.isAfter(horaFinalBBDDLocal)){
-                                    Toast.makeText(activity?.baseContext, "horas en uso", Toast.LENGTH_SHORT).show()
+                                    toastHoras()
                                 }else{
                                     //cuando meta 15:00 y 17:00
                                     if(hora_inicio.equals(h1) && horaFinal.isBefore(horaFinalBBDDLocal)){
-                                        Toast.makeText(activity?.baseContext, "horas en uso", Toast.LENGTH_SHORT).show()
+                                        toastHoras()
                                     }else{
                                         //cuando meta 14:00 y 19:00
                                         if(horaInicio.isBefore(horaFinalBBDDLocal) && hora_final.equals(h2)){
-                                            Toast.makeText(activity?.baseContext, "horas en uso", Toast.LENGTH_SHORT).show()
+                                            toastHoras()
                                         }else{
                                             //cuando meta 17:00 y 18:00
                                             if(horaInicio.isAfter(horaInicioBBDDLocal) && horaFinal.isBefore(horaFinalBBDDLocal)){
-                                                Toast.makeText(activity?.baseContext, "horas en uso", Toast.LENGTH_SHORT).show()
+                                                toastHoras()
                                             }else {
                                                 //cuando meta 17:00 y 19:00
                                                 if(horaInicio.isAfter(horaInicioBBDDLocal) && hora_final.equals(h2)){
-                                                    Toast.makeText(activity?.baseContext, "horas en uso", Toast.LENGTH_SHORT).show()
+                                                    toastHoras()
                                                 }else{
                                                     //cuando se compruebe se pasa a la parte del pago dandole el objeto de Reserva con todos los datos acumulados
                                                     fecha_cogida = false
@@ -355,11 +355,14 @@ class ReservarFechaFragment : Fragment() {
         }
 
     }
+    private fun toastHoras(){
+        Toast.makeText(activity?.baseContext, "horas en uso", Toast.LENGTH_SHORT).show()
+    }
 
     private fun guardarFecha(){
         Log.e("hora_bien","hora bien ")
         reserva.fecha = fecha_elegida
-        Toast.makeText(activity?.baseContext, "Fecha elegida:  "+fecha_elegida, Toast.LENGTH_SHORT).show()
+       // Toast.makeText(activity?.baseContext, "Fecha elegida:  "+fecha_elegida, Toast.LENGTH_SHORT).show()
         val reservar_pago = ReservarPagoFragment.newInstance(reserva)
 
         val fm = fragmentManager

@@ -279,10 +279,9 @@ class ReservarFechaFragment : Fragment() {
 
             if(pistas_cogida.get(i).equals(reserva.pista.nombre)){
 
-                if( reserva.pista.nombre.equals(pistas_cogida.get(i))){
                     val fecha_reserva = fechas_reservada.get(i).substring(0,10)
                     Log.e("fecha_mini"," "+fecha_reserva)
-
+                    //se comprueba que la fecha de la pista no este , puesto que si no es la misma no hay por que comparar mas
                     if(fecha_reserva.equals(fecha)){
                         val h1=fechas_reservada.get(i).substring(11,16)
                         val h2= fechas_reservada.get(i).substring(17,fechas_reservada.get(i).length)
@@ -332,16 +331,7 @@ class ReservarFechaFragment : Fragment() {
                                                 }else{
                                                     //cuando se compruebe se pasa a la parte del pago dandole el objeto de Reserva con todos los datos acumulados
                                                     fecha_cogida = false
-                                                    Log.e("hora_bien","hora bien ")
-                                                    reserva.fecha = fecha_elegida
-                                                    Toast.makeText(activity?.baseContext, "Reserva para el "+fecha_elegida, Toast.LENGTH_SHORT).show()
-                                                    val reservar_pago = ReservarPagoFragment.newInstance(reserva)
-
-                                                    val fm = fragmentManager
-                                                    val transaction = fm!!.beginTransaction()
-                                                    transaction.replace(R.id.nav_host_fragment, reservar_pago)
-                                                    transaction.addToBackStack(null)
-                                                    transaction.commit()
+                                                    guardarFecha()
                                                 }
 
                                             }
@@ -352,14 +342,31 @@ class ReservarFechaFragment : Fragment() {
 
                         }
 
+                    }else{
+                        guardarFecha()
                     }
-                }
 
+
+            }else{
+                guardarFecha()
             }
 
 
         }
 
+    }
+
+    private fun guardarFecha(){
+        Log.e("hora_bien","hora bien ")
+        reserva.fecha = fecha_elegida
+        Toast.makeText(activity?.baseContext, "Fecha elegida:  "+fecha_elegida, Toast.LENGTH_SHORT).show()
+        val reservar_pago = ReservarPagoFragment.newInstance(reserva)
+
+        val fm = fragmentManager
+        val transaction = fm!!.beginTransaction()
+        transaction.replace(R.id.nav_host_fragment, reservar_pago)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     private fun showTimePickerDialog() {

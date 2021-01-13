@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.tenisclubdroid.Comunicacion
@@ -33,7 +34,7 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth;
     private val GOOGLE_SIGN_IN = 100
-
+    lateinit var progressBarLogin : ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +47,7 @@ class LoginActivity : AppCompatActivity() {
         var etLoginPassword = this.findViewById<EditText>(R.id.etRegistroContra)
         var btnLoginGoogle = this.findViewById<Button>(R.id.btnLoginGoogle)
         val btnLoginNuevaContra = this.findViewById<Button>(R.id.btnLoginNuevaContra)
-
+        progressBarLogin= this.findViewById<ProgressBar>(R.id.progressBarLogin)
         auth = FirebaseAuth.getInstance()
 
         cargarSesion()
@@ -59,6 +60,8 @@ class LoginActivity : AppCompatActivity() {
             ) {
 
                 //se accede al acceso de Firebase
+                progressBarLogin.setVisibility(View.VISIBLE)
+
                 auth.signInWithEmailAndPassword(
                     etLoginEmail.text.toString(),
                     etLoginPassword.text.toString()
@@ -74,12 +77,14 @@ class LoginActivity : AppCompatActivity() {
                         prefs.putString("password", etLoginPassword.text.toString())
                         prefs.apply()
 
+                        progressBarLogin.setVisibility(View.GONE)
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                         finish()
                     } else {
                         //if(it.exception==null){
                             Toast.makeText(this, "Datos incorrectos!", Toast.LENGTH_SHORT).show()
+                        progressBarLogin.setVisibility(View.GONE)
                         //}
 
                     }
@@ -140,7 +145,7 @@ class LoginActivity : AppCompatActivity() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)
-
+                progressBarLogin.setVisibility(View.VISIBLE)
                 if (account != null) {
                     val credential = GoogleAuthProvider.getCredential(account.idToken, null)
                     FirebaseAuth.getInstance().signInWithCredential(credential)
@@ -157,6 +162,7 @@ class LoginActivity : AppCompatActivity() {
                                 val foto = user?.photoUrl.toString()
                                 val u = Usuario(nickname, foto, "Tu descripcion", 0, id)
                                 //se guarda en la base de datos
+                                progressBarLogin.setVisibility(View.GONE)
                                 FirebaseAuth.getInstance().currentUser?.let { it1 ->
                                     FirebaseDatabase.getInstance("https://tenisclubdroid-default-rtdb.europe-west1.firebasedatabase.app/")
                                         .getReference("usuarios").child(
@@ -172,6 +178,7 @@ class LoginActivity : AppCompatActivity() {
 
                             } else {
                                 //Toast.makeText(this, "Error de acceso", Toast.LENGTH_SHORT).show()
+                                progressBarLogin.setVisibility(View.GONE)
                             }
                         }
 

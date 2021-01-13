@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.example.tenisclubdroid.R
@@ -40,6 +41,10 @@ class ReservarPagoFragment : Fragment() {
         val tvReservaPagoPrecio = root.findViewById<TextView>(R.id.tvReservaPagoPrecio)
         val btnReservarPagar = root.findViewById<Button>(R.id.btnReservarPagoPagar)
 
+        val etReservaPagoNumTarjeta = root.findViewById<EditText>(R.id.etReservaPagoNumTarjeta)
+        val etReservaCsv = root.findViewById<EditText>(R.id.etReservaPagoCsv)
+        val etReservaFechaTarjeta = root.findViewById<EditText>(R.id.etReservaPagoFechaTarjeta)
+
         database =
             FirebaseDatabase.getInstance("https://tenisclubdroid-default-rtdb.europe-west1.firebasedatabase.app/")
 
@@ -64,15 +69,21 @@ class ReservarPagoFragment : Fragment() {
 
         btnReservarPagar.setOnClickListener(View.OnClickListener {
 
-            val random = Random()
 
-            val numerito = random.nextInt(0..100000)
-            val idReserva = reserva.idReservador+numerito.toString()
-            reserva.idReserva=idReserva
+            if(!etReservaPagoNumTarjeta.text.toString().isEmpty() && !etReservaCsv.text.isEmpty() && !etReservaFechaTarjeta.text.isEmpty()){
+                val random = Random()
 
-            databaseReference.child(idReserva).setValue(reserva).addOnCompleteListener {
-                Toast.makeText(requireContext(),"Pista Reservada!",Toast.LENGTH_LONG).show()
+                val numerito = random.nextInt(0..100000)
+                val idReserva = reserva.idReservador+numerito.toString()
+                reserva.idReserva=idReserva
+
+                databaseReference.child(idReserva).setValue(reserva).addOnCompleteListener {
+                    Toast.makeText(requireContext(),"Pista Reservada!",Toast.LENGTH_LONG).show()
+                }
+            }else{
+                Toast.makeText(requireContext(),"Compruebe los datos de la tarjeta",Toast.LENGTH_LONG).show()
             }
+
 
 
         })

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.example.tenisclubdroid.R
 import com.example.tenisclubdroid.ui.clases.Pista
 import com.example.tenisclubdroid.ui.clases.Reserva
+import com.example.tenisclubdroid.ui.contactos.BuscarContactoFragment
 import com.example.tenisclubdroid.ui.perfil.EditarPerfilFragment
 import com.example.tenisclubdroid.ui.perfil.ImagenRedonda
 import com.google.firebase.auth.FirebaseAuth
@@ -60,12 +61,16 @@ class ReservarFragment : Fragment() {
         tvReservarExtra1 = root.findViewById<TextView>(R.id.tvReservarExtra1)
         tvReservarExtra2 = root.findViewById<TextView>(R.id.tvReservarExtra2)
         ivReservarFoto = root.findViewById<ImageView>(R.id.ivReservarFoto)
-
         btnContinuar = root.findViewById<Button>(R.id.btnReservaContinuar)
+        val ibReservarAdversario = root.findViewById<ImageButton>(R.id.ibReservarContrincante)
+
+
         pista_elegida= Pista(null,null,0,null)
+
 
         lista_pistas = ArrayList()
 
+        //se cargan las pistas de la base de datos
         database =
             FirebaseDatabase.getInstance("https://tenisclubdroid-default-rtdb.europe-west1.firebasedatabase.app/")
 
@@ -132,10 +137,21 @@ class ReservarFragment : Fragment() {
 
         })
 
+        ibReservarAdversario.setOnClickListener(View.OnClickListener {
+
+            val buscarAdversario = BuscarContactoFragment()
+            val fm = fragmentManager
+            val transaction = fm!!.beginTransaction()
+            transaction.replace(R.id.nav_host_fragment, buscarAdversario)
+            transaction.addToBackStack(null)
+            transaction.commit()
+
+
+        })
         return root;
 
     }
-
+    //se rellena el spinner con las pistas
     private fun iniciar() {
 
         val lista_nombres = ArrayList<String>()

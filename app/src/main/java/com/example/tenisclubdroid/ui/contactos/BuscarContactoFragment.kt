@@ -38,7 +38,7 @@ class BuscarContactoFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        root = inflater.inflate(R.layout.fragment_buscar_contacto_list, container, false)
+        root = inflater.inflate(R.layout.fragment_contactos_list, container, false)
         lista_ids = ArrayList()
         lista_contactos = ArrayList()
 
@@ -50,7 +50,7 @@ class BuscarContactoFragment : Fragment() {
 
         val id_usuario = FirebaseAuth.getInstance().currentUser?.uid
         val referencia_usuario = databaseReference.child(id_usuario!!)
-
+        Log.e("lista_id_buscar"," "+id.toString())
         referencia_usuario.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -61,6 +61,7 @@ class BuscarContactoFragment : Fragment() {
                     Log.e("lista_id_buscar"," "+id.toString())
                 }
                 ver_contactos(lista_ids)
+
 
 
             }
@@ -85,8 +86,8 @@ class BuscarContactoFragment : Fragment() {
     private fun ver_contactos(lista_id: ArrayList<String>) {
         for(id_lista in lista_id){
 
-            val query= database.getReference ("usuarios").startAt("p").endAt("p\uf8ff")
-            query.addValueEventListener(object : ValueEventListener {
+            var referencia = databaseReferenceUsuarios.child(id_lista.toString())
+            referencia.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     //public Contacto(String nickName, String fotoPerfil, String idUsuario) {
                     val nickname = snapshot.child("nickName").value.toString()
@@ -115,9 +116,10 @@ class BuscarContactoFragment : Fragment() {
                                     "lista_buscar",
                                     "tamaño_contactos " + lista_contactos.size
                                 )
+                                val fm= fragmentManager
                                 (root as RecyclerView).adapter =
                                     com.example.tenisclubdroid.ui.contactos.MyContactoRecyclerViewAdapter(
-                                        lista_contactos
+                                        lista_contactos, fm!!
                                     )
                             }
                         }

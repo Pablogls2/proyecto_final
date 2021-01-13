@@ -12,9 +12,9 @@ import androidx.annotation.RequiresApi
 import com.example.tenisclubdroid.R
 import com.example.tenisclubdroid.ui.clases.Reserva
 import com.example.tenisclubdroid.ui.clases.TimePickerFragment
-import java.time.LocalDate
+import com.google.firebase.database.*
 import java.time.LocalTime
-import java.util.*
+import kotlin.collections.ArrayList
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,6 +36,15 @@ class ReservarFechaFragment : Fragment() {
     lateinit var hora_final: String
     lateinit var etTimeInicio: TextView
     lateinit var etTimeFinal: TextView
+     var fecha_cogida = true
+    lateinit var fechas_reservadas : ArrayList<String>
+    lateinit var pistas_cogidas : ArrayList<String>
+    lateinit var lista_reservas : ArrayList <String>
+    var fecha_elegida = ""
+
+
+    private lateinit var databaseReference: DatabaseReference
+    private lateinit var database: FirebaseDatabase
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,14 +67,21 @@ class ReservarFechaFragment : Fragment() {
         etTimeFinal = root.findViewById<TextView>(R.id.tvReservarHoraFinal)
         val btnReservaFechaContinuar = root.findViewById<Button>(R.id.btnReservarFechaContinuar)
         fecha = ""
+        pistas_cogidas= ArrayList()
+        fechas_reservadas= ArrayList()
+        lista_reservas= ArrayList()
+        database =
+            FirebaseDatabase.getInstance("https://tenisclubdroid-default-rtdb.europe-west1.firebasedatabase.app/")
+
+
+        databaseReference = database.reference.child("reservas")
 
 
         calendarioReserva.setOnDateChangeListener(CalendarView.OnDateChangeListener { _, year, month, dayOfMonth ->
+
             fecha = dayOfMonth.toString() + "-" + (month + 1) + "-" + year
             Log.e("fecha", fecha.length.toString())
         })
-
-
 
 
         etTimeInicio.setOnClickListener { showTimePickerDialog() }
@@ -77,75 +93,75 @@ class ReservarFechaFragment : Fragment() {
             hora_inicio = etTimeInicio.text.toString()
             hora_final = etTimeFinal.text.toString()
 
-            if (!hora_inicio.equals("Hora de inicio:") && !hora_final.equals("Hora final:")) {
 
+            //comprobamos que ha introducido una fecha
+            if (fecha.length != 0) {
 
-                val hora_inicio_valida =
-                    (hora_inicio.startsWith("1:") || hora_inicio.startsWith("2:") || hora_inicio.startsWith(
-                        "3"
-                    ) || hora_inicio.startsWith("4:") || hora_inicio.startsWith("5:") || hora_inicio.startsWith(
-                        "6:"
-                    ) || hora_inicio.startsWith("7:") || hora_inicio.startsWith("8:") || hora_inicio.startsWith(
-                        "9:"
-                    ) || hora_inicio.startsWith("20:") || hora_inicio.startsWith("21:") || hora_inicio.startsWith(
-                        "22:"
-                    ) || hora_inicio.startsWith("23:") || hora_inicio.startsWith("0:"))
-                val hora_final_valida =
-                    (hora_final.startsWith("1:") || hora_final.startsWith("2:") || hora_final.startsWith(
-                        "3:"
-                    ) || hora_final.startsWith(
-                        "4:"
-                    ) || hora_final.startsWith("5:") || hora_final.startsWith("6:") || hora_final.startsWith(
-                        "7:"
-                    ) || hora_final.startsWith("8:") || hora_final.startsWith("9:") || hora_final.startsWith(
-                        "20:"
-                    ) || hora_final.startsWith("21:") || hora_final.startsWith("22:") || hora_final.startsWith(
-                        "23:"
-                    ) || hora_final.startsWith("0:"))
-                if (hora_inicio_valida || hora_final_valida) {
-                    Toast.makeText(
-                        activity?.baseContext,
-                        "Nuestro horario es de 10:00 a 19:00",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
+                //comprobamos que ha introducido la hora de inicio y final de la reserva
+                if (!hora_inicio.equals("Hora de inicio:") && !hora_final.equals("Hora final:")) {
 
-
-                    val horaInicio = LocalTime.parse(hora_inicio)
-                    val horaFinal = LocalTime.parse(hora_final)
-                    if (horaInicio.isAfter(horaFinal) || horaInicio.equals(horaFinal)) {
+                    //comprobamos que cumpla el horario (para no hacer una reserva a las 2 de la madrugada
+                    if (!horas_validas(hora_inicio, hora_final)) {
                         Toast.makeText(
                             activity?.baseContext,
-                            "Revise las horas ",
+                            "Nuestro horario es de 10:00 a 19:00",
                             Toast.LENGTH_SHORT
-                        )
-                            .show()
+                        ).show()
                     } else {
 
-                        if(fecha.length<10){
-                            fecha= fecha.substring(0,3)+ "0" + fecha.substring(3,9)
-                            Log.e("fecha_nueva"," "+ fecha)
+                        //se pasan las horas (String) a horas de tipo LocalTime para poder trabajar con ellas y comprobar que estan bien
+                        val horaInicio = LocalTime.parse(hora_inicio)
+                        val horaFinal = LocalTime.parse(hora_final)
+                        if (horaInicio.isAfter(horaFinal) || horaInicio.equals(horaFinal)) {
+                            Toast.makeText(
+                                activity?.baseContext,
+                                "Revise las horas ",
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                        } else {
+                            //por como funciona el calendario cuando es un mes menor a 10 lo deja con formato 15/1/2021 en vez de 15/01/2021 y aqui se soluciona
+                            if (fecha.length < 10) {
+                                fecha = fecha.substring(0, 3) + "0" + fecha.substring(3, 9)
+                                //Log.e("fecha_nueva", " " + fecha)
+                            }
+
+                            //ahora vamos a comprobar que no este la pista cogida ya
+                            /////
+                            /////
+                            //ponemos la fecha junto con las horas
+                            fecha_elegida = fecha + "/" + hora_inicio + "-" + hora_final
+                            //se llama al metodo de comprobar que no haya una reserva previa para la misma pista en el mismo intervalo de horas
+                            reservas_cogidas()
+
+
+                           /* reserva.fecha = fecha_elegida
+
+                            val reservar_pago = ReservarPagoFragment.newInstance(reserva)
+
+                            val fm = fragmentManager
+                            val transaction = fm!!.beginTransaction()
+                            transaction.replace(R.id.nav_host_fragment, reservar_pago)
+                            transaction.addToBackStack(null)
+                            transaction.commit()*/
+
+
                         }
-                        val fecha_elegida = fecha + "/" + hora_inicio + "-" + hora_final
-                        reserva.fecha=fecha_elegida
-
-                        val reservar_pago = ReservarPagoFragment.newInstance(reserva)
-
-                        val fm = fragmentManager
-                        val transaction = fm!!.beginTransaction()
-                        transaction.replace(R.id.nav_host_fragment, reservar_pago)
-                        transaction.addToBackStack(null)
-                        transaction.commit()
-
-
-
-
-
-
                     }
+                } else {
+                    Toast.makeText(
+                        activity?.baseContext,
+                        "por favor elige el horario",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
                 }
-            }else{
-                Toast.makeText(activity?.baseContext, "por favor elige el horario", Toast.LENGTH_SHORT)
+            } else {
+                Toast.makeText(
+                    activity?.baseContext,
+                    "elige una fecha",
+                    Toast.LENGTH_SHORT
+                )
                     .show()
             }
 
@@ -168,129 +184,183 @@ class ReservarFechaFragment : Fragment() {
             }
     }
 
-    /*private fun rellenar_horas(){
-        spinnerHoraInicio= root.findViewById<Spinner>(R.id.spinnerReservarFechaHora1)
-        spinnerHoraFinal = root.findViewById<Spinner>(R.id.spinnerReservarFechaHora2)
+    private fun horas_validas(hora_inicio: String, hora_final: String): Boolean {
+        var hora_valida = false
 
-        val lista_horas  = arrayOf(" ","09:00","10:00","11:00","12:00","13:00","16:00","17:00","18:00","19:00")
+        val hora_inicio_valida =
+            (hora_inicio.startsWith("1:") || hora_inicio.startsWith("2:") || hora_inicio.startsWith(
+                "3"
+            ) || hora_inicio.startsWith("4:") || hora_inicio.startsWith("5:") || hora_inicio.startsWith(
+                "6:"
+            ) || hora_inicio.startsWith("7:") || hora_inicio.startsWith("8:") || hora_inicio.startsWith(
+                "9:"
+            ) || hora_inicio.startsWith("20:") || hora_inicio.startsWith("21:") || hora_inicio.startsWith(
+                "22:"
+            ) || hora_inicio.startsWith("23:") || hora_inicio.startsWith("0:"))
+        val hora_final_valida =
+            (hora_final.startsWith("1:") || hora_final.startsWith("2:") || hora_final.startsWith(
+                "3:"
+            ) || hora_final.startsWith(
+                "4:"
+            ) || hora_final.startsWith("5:") || hora_final.startsWith("6:") || hora_final.startsWith(
+                "7:"
+            ) || hora_final.startsWith("8:") || hora_final.startsWith("9:") || hora_final.startsWith(
+                "20:"
+            ) || hora_final.startsWith("21:") || hora_final.startsWith("22:") || hora_final.startsWith(
+                "23:"
+            ) || hora_final.startsWith("0:"))
+
+        if (!hora_inicio_valida && !hora_final_valida) {
+            hora_valida = true
+        }
 
 
-        spinnerHoraInicio.setAdapter(
-            ArrayAdapter(
-                requireActivity(),
-                android.R.layout.simple_spinner_item,
-                lista_horas
-            )
-        )
+        return hora_valida
+    }
 
-        spinnerHoraFinal.setAdapter(
-            ArrayAdapter(
-                requireActivity(),
-                android.R.layout.simple_spinner_item,
-                lista_horas
-            )
-        )
+    private fun reservas_cogidas (){
+        databaseReference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.children.forEach {
+                    val id = it.key
+                    lista_reservas.add(id.toString())
+                }
+                fechas_pistas(lista_reservas)
 
-        spinnerHoraInicio.onItemSelectedListener= object : AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
+            }
 
-                //se hace un switch dependiendo de lo seleccionado
-                val seleccion = spinnerHoraInicio.getSelectedItem() as String
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
 
-                when (seleccion){
-                    "09:00"-> {
-                        hora_inicio = lista_horas.get(1)
-                    }
-                    "10:00"->{
+        })
 
-                        hora_inicio = lista_horas.get(2)
+
+
+    }
+
+    private fun fechas_pistas(lista_id : ArrayList<String>){
+        for(idLista in lista_id){
+            var referencia = databaseReference.child(idLista.toString())
+            referencia
+                .addValueEventListener(object : ValueEventListener {
+                    @RequiresApi(Build.VERSION_CODES.O)
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        //Log.e(" fechas_de_reservas", " " + snapshot.child("fecha").value.toString())
+                        //Log.e(" fecha-PISTAS", " " + snapshot.child("pista").child("nombre").value.toString())
+                        val fechaa =snapshot.child("fecha").value.toString()
+                        val pista=snapshot.child("pista").child("nombre").value.toString()
+                        //Log.e("fecha",fechaa+pista)
+
+                        fechas_reservadas.add( fechaa)
+                        pistas_cogidas.add(pista)
+
+                        if(lista_id.size== fechas_reservadas.size){
+                            fecha_valida(fechas_reservadas,pistas_cogidas)
+                        }
                     }
-                    "11:00"->{
-                        hora_inicio = lista_horas.get(3)
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
                     }
-                    "12:00"->{
-                        hora_inicio = lista_horas.get(4)
-                    }
-                    "13:00"->{
-                        hora_inicio = lista_horas.get(5)
-                    }
-                    "16:00"->{
-                        hora_inicio = lista_horas.get(6)
-                    }
-                    "17:00"->{
-                        hora_inicio = lista_horas.get(7)
-                    }
-                    "18:00"->{
-                        hora_inicio = lista_horas.get(8)
-                    }
-                    "19:00"->{
-                        Toast.makeText(
-                            activity?.baseContext, "No se puede elegir esta hora para iniciar", Toast.LENGTH_SHORT).show()
+                })
+
+
+
+        }
+
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun fecha_valida(fechas_reservada: ArrayList<String>, pistas_cogida: ArrayList<String>) {
+        val i=0
+
+        for (fe in fechas_reservada){
+
+            if(pistas_cogida.get(i).equals(reserva.pista.nombre)){
+
+                if( reserva.pista.nombre.equals(pistas_cogida.get(i))){
+                    val fecha_reserva = fechas_reservada.get(i).substring(0,10)
+                    Log.e("fecha_mini"," "+fecha_reserva)
+
+                    if(fecha_reserva.equals(fecha)){
+                        val h1=fechas_reservada.get(i).substring(11,16)
+                        val h2= fechas_reservada.get(i).substring(17,fechas_reservada.get(i).length)
+
+                        Log.e("fecha_ hora inicial / final "," "+h1 + " AA" +h2)
+
+                        /*
+                        Aqui empezamos a comprobar que las horas no se solapan y no se reserva en el intervalo de tiempo que ya tiene reserva
+                        Para enterder mas facilmente cada caso voy a explicarlo con un ejemplo practico.
+                        Partimos de que hay una reserva de 15:00 a 19:00 de la tarde
+                        */
+
+                        //para cuando el usuario meta 15:00 y 19:00
+                        if(hora_inicio.equals(h1) || (hora_final.equals(h2))) {
+                            Toast.makeText(activity?.baseContext, "horas en uso", Toast.LENGTH_SHORT).show()
+                        }else{
+                            //para trabajar con las horas las pasamos al tipo de objeto de LocalTime
+                            val horaInicioBBDDLocal = LocalTime.parse(h1)
+                            val horaFinalBBDDLocal = LocalTime.parse(h2)
+
+                            val horaInicio = LocalTime.parse(hora_inicio)
+                            val horaFinal = LocalTime.parse(hora_final)
+
+                            //cuando meta 14:00 y 16:00
+                            if(horaInicio.isBefore(horaInicioBBDDLocal) && horaFinal.isAfter(horaInicioBBDDLocal) ){
+                                Toast.makeText(activity?.baseContext, "horas en uso", Toast.LENGTH_SHORT).show()
+                            }else{
+                                //cuando meta 14:00 y 20:00
+                                if(horaInicio.isBefore(horaFinalBBDDLocal) && horaFinal.isAfter(horaFinalBBDDLocal)){
+                                    Toast.makeText(activity?.baseContext, "horas en uso", Toast.LENGTH_SHORT).show()
+                                }else{
+                                    //cuando meta 15:00 y 17:00
+                                    if(hora_inicio.equals(h1) && horaFinal.isBefore(horaFinalBBDDLocal)){
+                                        Toast.makeText(activity?.baseContext, "horas en uso", Toast.LENGTH_SHORT).show()
+                                    }else{
+                                        //cuando meta 14:00 y 19:00
+                                        if(horaInicio.isBefore(horaFinalBBDDLocal) && hora_final.equals(h2)){
+                                            Toast.makeText(activity?.baseContext, "horas en uso", Toast.LENGTH_SHORT).show()
+                                        }else{
+                                            //cuando meta 17:00 y 18:00
+                                            if(horaInicio.isAfter(horaInicioBBDDLocal) && horaFinal.isBefore(horaFinalBBDDLocal)){
+                                                Toast.makeText(activity?.baseContext, "horas en uso", Toast.LENGTH_SHORT).show()
+                                            }else {
+                                                //cuando meta 17:00 y 19:00
+                                                if(horaInicio.isAfter(horaInicioBBDDLocal) && hora_final.equals(h2)){
+                                                    Toast.makeText(activity?.baseContext, "horas en uso", Toast.LENGTH_SHORT).show()
+                                                }else{
+                                                    //cuando se compruebe se pasa a la parte del pago dandole el objeto de Reserva con todos los datos acumulados
+                                                    fecha_cogida = false
+                                                    Log.e("hora_bien","hora bien ")
+                                                    reserva.fecha = fecha_elegida
+                                                    Toast.makeText(activity?.baseContext, "Reserva para el "+fecha_elegida, Toast.LENGTH_SHORT).show()
+                                                    val reservar_pago = ReservarPagoFragment.newInstance(reserva)
+
+                                                    val fm = fragmentManager
+                                                    val transaction = fm!!.beginTransaction()
+                                                    transaction.replace(R.id.nav_host_fragment, reservar_pago)
+                                                    transaction.addToBackStack(null)
+                                                    transaction.commit()
+                                                }
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+
                     }
                 }
 
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
 
-            }
         }
 
-        spinnerHoraFinal.onItemSelectedListener= object : AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-
-                //se hace un switch dependiendo de lo seleccionado
-                val seleccion = spinnerHoraFinal.getSelectedItem() as String
-
-                when (seleccion){
-                    "09:00"-> {
-                        Toast.makeText(
-                            activity?.baseContext, "No puedes elegir esta hora como final ", Toast.LENGTH_SHORT).show()
-                    }
-                    "10:00"->{
-
-                        hora_final = lista_horas.get(2)
-                    }
-                    "11:00"->{
-                        hora_final = lista_horas.get(3)
-                    }
-                    "12:00"->{
-                        hora_final = lista_horas.get(4)
-                    }
-                    "13:00"->{
-                        hora_final = lista_horas.get(5)
-                    }
-                    "16:00"->{
-                        hora_final = lista_horas.get(6)
-                    }
-                    "17:00"->{
-                        hora_final = lista_horas.get(7)
-                    }
-                    "18:00"->{
-                        hora_final = lista_horas.get(8)
-                    }
-                    "19:00"->{
-                        hora_final = lista_horas.get(9)
-                    }
-                }
-
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-
-            }
-        }
-    }*/
+    }
 
     private fun showTimePickerDialog() {
         val timePicker = TimePickerFragment { onTimeSelected(it) }

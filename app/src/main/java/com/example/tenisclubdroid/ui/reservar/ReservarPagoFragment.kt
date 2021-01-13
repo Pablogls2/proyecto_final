@@ -21,7 +21,6 @@ class ReservarPagoFragment : Fragment() {
     lateinit var reserva: Reserva
     lateinit var root: View
     private lateinit var databaseReference: DatabaseReference
-    private lateinit var nombresCogidos: DatabaseReference
     private lateinit var database: FirebaseDatabase
 
 

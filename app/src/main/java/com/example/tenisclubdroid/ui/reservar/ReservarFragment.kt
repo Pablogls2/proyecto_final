@@ -45,6 +45,7 @@ class ReservarFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //si volvemos del Fragment de buscar advsario cargaremos la pista que eligió antes de irse y cogeremos el nombre y id del adversario
         if (arguments?.getSerializable("pista") != null) {
 
 
@@ -77,6 +78,7 @@ class ReservarFragment : Fragment() {
         tvReservarContricante= root.findViewById<TextView>(R.id.tvReservarContrincante)
         val ibReservarAdversario = root.findViewById<ImageButton>(R.id.ibReservarContrincante)
 
+        //aqui se carga la pista al volver del adversario (si lo ha hecho)
         if (pista_elegida.nombre!=null) {
 
             Picasso.get().load(pista_elegida.foto).into(ivReservarFoto)
@@ -88,7 +90,7 @@ class ReservarFragment : Fragment() {
             tvReservarContricante.setText(nombre_adversario)
 
         }
-
+        //como en otros Fragment se cargan los objetos necesarios para manipular la base de datos
         lista_pistas = ArrayList()
 
         //se cargan las pistas de la base de datos
@@ -97,6 +99,7 @@ class ReservarFragment : Fragment() {
 
         databaseReference = database.reference.child("pistas")
 
+        //primero cogemos todas las pistas que tenga el club y las guardamos en un ArrayList
         databaseReference.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -115,6 +118,7 @@ class ReservarFragment : Fragment() {
                     val pista = Pista(foto, nombre, precio, lista_extras)
                     lista_pistas.add(pista)
                     Log.e("pista", " d" + pista.toString())
+                    //este metodo metera las pistas en el spinner para que el usuario pueda verlas
                     iniciar()
 
                 }
@@ -127,27 +131,32 @@ class ReservarFragment : Fragment() {
 
         })
 
+        //una vez tenga una pista elegida pulsara el boton de continuar
         btnContinuar.setOnClickListener(View.OnClickListener {
             val fm = fragmentManager
-
+            //se comprueba que efectivamente ha elegido una pista
             if (pista_elegida.nombre != null) {
 
 
                 val lista_extras = ArrayList<Int>()
-
+                //se comprueba si ha elegido los extras para añadirlos a la reserva
                 if (check_limpieza.isChecked) {
                     lista_extras.add(pista_elegida.extras.get(0))
                 }
                 if (check_luces.isChecked) {
                     lista_extras.add(pista_elegida.extras.get(1))
                 }
+                //se coge el id del propio usuario para guardarlo en la reserva
                 val idReservador = FirebaseAuth.getInstance().uid.toString()
 
+                //se crea la reserva con la pista, la lista de los extras y el usuario
                 val reserva = Reserva(pista_elegida, lista_extras, idReservador)
 
+                //si ha elegido un contricante se añadirá a la reserva
                 if(!id_adversario.isEmpty()){
                     reserva.idAdversario=id_adversario
                 }
+                //pasamos a elegir la fecha de la reserva y le pasamos la reserva con los datos hasta ahora
                 Log.e("reserva",reserva.toString())
                 val reservar_fecha = ReservarFechaFragment.newInstance(reserva)
 
@@ -161,10 +170,12 @@ class ReservarFragment : Fragment() {
 
         })
 
+        //Listener del boton de añadir un contrincante
         ibReservarAdversario.setOnClickListener(View.OnClickListener {
-
+            //previamente se debe elegir una pista
             if (pista_elegida.nombre != null) {
-                Log.e("sd","adsfsdfsdfsdf")
+
+                //nos vamos al fragment de buscar contactos dandole la pista elegida para despues recargarla para que sea invisible para el usuario
                 val buscarAdversario = BuscarContactoFragment.newInstance(pista_elegida)
                 val fm = fragmentManager
                 val transaction = fm!!.beginTransaction()
@@ -174,12 +185,7 @@ class ReservarFragment : Fragment() {
 
             } else {
                 Toast.makeText(activity?.baseContext, "Elige una pista", Toast.LENGTH_SHORT).show()
-                /*val buscarAdversario = BuscarContactoFragment()
-                val fm = fragmentManager
-                val transaction = fm!!.beginTransaction()
-                transaction.replace(R.id.nav_host_fragment, buscarAdversario)
-                transaction.addToBackStack(null)
-                transaction.commit()*/
+
             }
 
 
@@ -192,7 +198,7 @@ class ReservarFragment : Fragment() {
 
     //se rellena el spinner con las pistas
     private fun iniciar() {
-
+        //se cogen los nombres de las pistas de nuestra lista previamente rellanada
         val lista_nombres = ArrayList<String>()
         lista_nombres.add("             ")
         var i = 0
@@ -200,7 +206,7 @@ class ReservarFragment : Fragment() {
             lista_nombres.add(lista_pistas.get(i).nombre)
             i++
         }
-
+        //se agrega al spinner la lista de los nombres de las pistas
         spinner.setAdapter(
             ArrayAdapter(
                 requireActivity(),
@@ -208,7 +214,7 @@ class ReservarFragment : Fragment() {
                 lista_nombres
             )
         )
-
+        //con este Listener vamos a ir cambiando de pista segun el usuario la elija mediante el nombre
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -220,12 +226,10 @@ class ReservarFragment : Fragment() {
                 //se hace un switch dependiendo de lo seleccionado
                 val seleccion = spinner.getSelectedItem() as String
 
+                //segun sea el nombre de la pista se cargaran unos datos u otros
                 when (seleccion) {
                     lista_nombres.get(1) -> {
-                        tvReservarExtra1.setText(
-                            "Limpieza: " + " " + lista_pistas.get(0).extras.get(
-                                0
-                            ).toString() + " €"
+                        tvReservarExtra1.setText("Limpieza: " + " " + lista_pistas.get(0).extras.get(0).toString() + " €"
                         )
                         tvReservarExtra2.setText(
                             "Luces: " + " " + lista_pistas.get(0).extras.get(1).toString() + " €"
@@ -241,10 +245,7 @@ class ReservarFragment : Fragment() {
 
                     }
                     lista_nombres.get(2) -> {
-                        tvReservarExtra1.setText(
-                            "Limpieza: " + " " + lista_pistas.get(1).extras.get(
-                                0
-                            ).toString() + " €"
+                        tvReservarExtra1.setText("Limpieza: " + " " + lista_pistas.get(1).extras.get(0).toString() + " €"
                         )
                         tvReservarExtra2.setText(
                             "Luces" + " " + lista_pistas.get(1).extras.get(1).toString() + " €"

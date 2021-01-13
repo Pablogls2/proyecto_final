@@ -47,28 +47,31 @@ class ContactosFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         root = inflater.inflate(R.layout.fragment_contactos_list, container, false)
+        //inicializamos las listas
         lista_ids = ArrayList()
         lista_contactos = ArrayList()
 
-        //cogemos la base de datos y las referencias necesarias
-        database =
-            FirebaseDatabase.getInstance("https://tenisclubdroid-default-rtdb.europe-west1.firebasedatabase.app/")
+        //cogemos la base de datos y las referencias necesarias, que son los contactos y los usuarios
+        //En los contactos se encuentran los id de cada contacto (que son usuarios normales)
+        database = FirebaseDatabase.getInstance("https://tenisclubdroid-default-rtdb.europe-west1.firebasedatabase.app/")
 
         databaseReference = database.reference.child("Contactos")
         databaseReferenceUsuarios = database.reference.child("usuarios")
 
-        //busca las referencias de los contactos que son los propios uid de los usuarios
+        //busca las referencias de los contactos que son los propios uid de los usuarios, cada usuario con su id guarda dentro los ids de sus contactos
         val id_usuario = FirebaseAuth.getInstance().currentUser?.uid
         val referencia_usuario = databaseReference.child(id_usuario!!)
 
         referencia_usuario.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                //se rrecorren todos los valores
+                //se recorren todos los valores
                 snapshot.children.forEach {
                     val id = it.getValue()
+                    //se añaden en una lista todos los ids de los contactos
                     lista_ids.add(id.toString())
                 }
+                //llamamos a otro metodo para verlos
                 ver_contactos(lista_ids)
             }
 
@@ -91,7 +94,9 @@ class ContactosFragment : Fragment() {
     }
 
     private fun ver_contactos(lista_id: ArrayList<String>) {
+        //se recorre la lista de los ids de los contactos
         for (id_lista in lista_id) {
+            //ahora la referencia seran los ids de los contactos contra la bbdd de los usuarios
             var refrencia = databaseReferenceUsuarios.child(id_lista.toString())
             Log.e("lista_id", " " + id_lista.toString())
             refrencia.addValueEventListener(object : ValueEventListener {
@@ -102,8 +107,10 @@ class ContactosFragment : Fragment() {
                     val idUsuario = snapshot.child("idUsuario").value.toString()
                     val descripcion= snapshot.child("descripcion").value.toString()
                     val contacto = Contacto(nickname, fotoPerfil, idUsuario, descripcion)
+                    //se guardan los contactos (usuarios) en otra lista
                     añadir_contacto(contacto)
 
+                    //cuando toda la lista está recorrida y los contactos cogidos se monta la lista (recyclerview)
                     if (lista_id.size == lista_contactos.size) {
 
                         if (root is RecyclerView) {
@@ -164,10 +171,8 @@ class ContactosFragment : Fragment() {
 
     companion object {
 
-        // TODO: Customize parameter argument names
         const val ARG_COLUMN_COUNT = "column-count"
 
-        // TODO: Customize parameter initialization
         @JvmStatic
         fun newInstance(columnCount: Int) =
             ContactosFragment().apply {

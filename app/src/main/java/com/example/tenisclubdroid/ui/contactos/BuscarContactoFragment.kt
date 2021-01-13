@@ -35,7 +35,7 @@ class BuscarContactoFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        //recibe la pista para que la cargue al volver
         arguments?.getSerializable("pista").let {
             pista = it as Pista
         }
@@ -47,6 +47,7 @@ class BuscarContactoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         root = inflater.inflate(R.layout.fragment_contactos_list, container, false)
+        //mismo funcionamiento que con la lista de contactos , la diferencia está en el recycler view
         lista_ids = ArrayList()
         lista_contactos = ArrayList()
 
@@ -125,6 +126,7 @@ class BuscarContactoFragment : Fragment() {
                                     "tamaño_contactos " + lista_contactos.size
                                 )
                                 val fm= fragmentManager
+                                //esta vez tambien le agregamos la pista para devolverla a la reserva
                                 (root as RecyclerView).adapter =
                                     com.example.tenisclubdroid.ui.contactos.MyContactoRecyclerViewAdapter(
                                         lista_contactos, fm!!,pista

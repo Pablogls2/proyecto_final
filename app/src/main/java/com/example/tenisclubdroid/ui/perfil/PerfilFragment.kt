@@ -15,11 +15,6 @@ import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
 
 
-/**
- * A simple [Fragment] subclass.
- * Use the [PerfilFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class PerfilFragment : Fragment() {
 
     private lateinit var database: FirebaseDatabase
@@ -44,27 +39,28 @@ class PerfilFragment : Fragment() {
         var root = inflater.inflate(R.layout.fragment_perfil, container, false)
 
 
-        //para que el teclado no se vuelva loco
+        //para que el teclado funcione correctamente
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
         val tvPerfilNickName = root.findViewById<TextView>(R.id.etPerfilNickName)
         val tvPerfilDescripcion = root.findViewById<TextView>(R.id.etPerfilDescripcion)
         val ivPerfilFoto = root.findViewById<ImageView>(R.id.ivPerfilFoto)
-        val btnPerfilQr = root.findViewById<Button>(R.id.btnPerfilQr)
+        //cargamos la base de datos de real time
+        database = FirebaseDatabase.getInstance("https://tenisclubdroid-default-rtdb.europe-west1.firebasedatabase.app/")
 
-
-        //se coge el usuario por su uid
-        database =
-            FirebaseDatabase.getInstance("https://tenisclubdroid-default-rtdb.europe-west1.firebasedatabase.app/")
-
+        //cogemos la referencia, para el perfil son los usuarios
         databaseReference = database.reference.child("usuarios")
+
         val id_usuario = FirebaseAuth.getInstance().currentUser?.uid
 
+        //buscamos entre todos los usuarios al acutal por su id
         val referencia_usuario = databaseReference.child(id_usuario!!)
 
+        //lo buscamos
         referencia_usuario.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
+                //cargamos sus datos
                 tvPerfilNickName.setText(snapshot.child("nickName").value.toString())
                 tvPerfilDescripcion.setText(snapshot.child("descripcion").value.toString())
                 fotoUrl = snapshot.child("fotoPerfil").value.toString()
@@ -86,7 +82,6 @@ class PerfilFragment : Fragment() {
 
         })
 
-        //public Usuario(String nickName, String fotoPerfil, String descripcion, int rol) {
 
         return root;
 
@@ -98,7 +93,7 @@ class PerfilFragment : Fragment() {
         inflater.inflate(R.menu.menu_perfil, menu)
     }
 
-
+    //menu de la barra de tareas , uno para ir a editar el perfil y otro para cerrar sesion
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_edit -> {

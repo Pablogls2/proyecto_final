@@ -27,7 +27,7 @@ class ContraOlvidada : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+
         val root = inflater.inflate(R.layout.fragment_contra_olvidada, container, false)
         val ivRegistroAtras = root.findViewById<ImageView>(R.id.ivRegistroAtras2)
         val etContraOlvidadaEmail = root.findViewById<EditText>(R.id.etContraOlvidadaEmail)
@@ -42,11 +42,12 @@ class ContraOlvidada : Fragment() {
         btnContraOlvidadaEnviar.setOnClickListener(View.OnClickListener {
 
             val email = etContraOlvidadaEmail.text.toString()
-
+            //se comprueba que haya introducido un email
             if (!email.isEmpty()) {
                 email.trim()
 
                 if (comprobarEmail(email)) {
+                    //usamos el metodo del servicio de Firebase para restablecer la contraseña y volvemos al login
                     auth = FirebaseAuth.getInstance()
                     auth.sendPasswordResetEmail(email).addOnCompleteListener {
                         if (it.isSuccessful) {
@@ -89,6 +90,9 @@ class ContraOlvidada : Fragment() {
         return root;
     }
 
+    /**
+     * Metodo para comprobar el formato de un email
+     */
     private fun comprobarEmail(email: String): Boolean {
 
         // Patrón para validar el email

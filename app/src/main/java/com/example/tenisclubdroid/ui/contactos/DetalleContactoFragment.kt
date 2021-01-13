@@ -12,12 +12,13 @@ import com.example.tenisclubdroid.ui.perfil.PerfilFragment
 import com.squareup.picasso.Picasso
 
 class DetalleContactoFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+
     lateinit var contacto: Contacto
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        //recoge el contacto
         arguments?.getSerializable("contacto").let {
             contacto = it as Contacto
         }
@@ -27,14 +28,14 @@ class DetalleContactoFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        // cargamos los componentes
         val root = inflater.inflate(R.layout.fragment_detalle_contacto, container, false)
 
         val etEditarNickName = root.findViewById<TextView>(R.id.etDetalleContactoNickName)
         val etEditarDescripcion = root.findViewById<TextView>(R.id.etDetalleContactoDescripcion)
         val ivPerfilFoto = root.findViewById<ImageView>(R.id.ivDetalleContactoFoto)
 
-
+        //metemos los datos del contacto en los campos
         etEditarNickName.setText(contacto.nickName)
         etEditarDescripcion.setText(contacto.descripcion)
         Picasso.get().load(contacto.fotoPerfil).transform(ImagenRedonda()).into(ivPerfilFoto)

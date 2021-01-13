@@ -19,19 +19,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import java.util.regex.Pattern
 
-
-/**
- * A simple [Fragment] subclass.
- * Use the [RegistroFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class RegistroFragment : Fragment() {
 
     private lateinit var databaseReference: DatabaseReference
     private lateinit var nombresCogidos: DatabaseReference
     private lateinit var database: FirebaseDatabase
     private lateinit var auth: FirebaseAuth
-    var nickname_cogido = false
 
 
     override fun onCreateView(
@@ -80,6 +73,7 @@ class RegistroFragment : Fragment() {
                             it1, R.color.background_tint_azul
                         )
                     })
+                    //se comprueba que la contraseña es de al menos 6 caracteres
                     if (contra.trim().length >= 6) {
                         etRegistroContra.setBackgroundTintList(activity?.applicationContext?.let { it1 ->
                             ContextCompat.getColorStateList(
@@ -161,30 +155,33 @@ class RegistroFragment : Fragment() {
     }
 
     private fun registrar(usuario: String, email: String, contra: String) {
+        //primero cogeremos los nombres que ya estan registrados para comprobar que el nuevo usuario no lo repite
         nombresCogidos.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 Log.e("repetido", "" + dataSnapshot.child(usuario).key)
+                //si da false significa que no existe ningun nombre asi registrado
                 if (!dataSnapshot.hasChild(usuario)) {
-                    // dato =dataSnapshot.child(sUsername).key.toString()
+                    // si no existe creamos al usuario con los metodos que da Firebase
                     FirebaseAuth.getInstance().createUserWithEmailAndPassword(
                         email,
                         contra
                     ).addOnCompleteListener {
-
+                        //si el registro ha sido correcto lo guardaremos tambien en la base de datos de real time
                         if (it.isSuccessful) {
-                            val id =
-                                FirebaseAuth.getInstance().currentUser?.uid.toString()
+                            //guardamos el  usuario en la bbdd con su id, una foto predeterminada, y su nickname
+                            //la id será el id que Firebase le ha dado al hacer el registro
+                            val id = auth.uid.toString()
                             val foto_predeterminada= "https://firebasestorage.googleapis.com/v0/b/tenisclubdroid.appspot.com/o/usuario.jpg?alt=media&token=b34680bc-64a9-4598-a734-8180aa5d2844"
                             //public Usuario(String nickName, String fotoPerfil, String descripcion, int rol)
-                            var u = Usuario(usuario, foto_predeterminada,"Tu descripcion",  0,id)
+                            val u = Usuario(usuario, foto_predeterminada,"Tu descripcion",  0,id)
 
-
+                            //lo guardamos
                             FirebaseAuth.getInstance().currentUser?.let { it1 ->
                                 FirebaseDatabase.getInstance("https://tenisclubdroid-default-rtdb.europe-west1.firebasedatabase.app/")
                                     .getReference("usuarios").child(
                                         it1.uid
                                     ).setValue(u).addOnCompleteListener {
-
+                                        //si ha salido bien agregamos su nickame a los nombres cogidos
                                         if (it.isSuccessful) {
                                             nombresCogidos.child(usuario).setValue(id)
                                             val toast1 = Toast.makeText(

@@ -11,6 +11,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.tenisclubdroid.R
 import com.example.tenisclubdroid.ui.clases.Contacto
+import com.example.tenisclubdroid.ui.clases.Pista
+import com.example.tenisclubdroid.ui.clases.Reserva
+import com.example.tenisclubdroid.ui.reservar.ReservarFechaFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
@@ -28,9 +31,14 @@ class BuscarContactoFragment : Fragment() {
     private lateinit var databaseReferenceUsuarios: DatabaseReference
     lateinit var root: View
 
+    lateinit var pista: Pista
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        arguments?.getSerializable("pista").let {
+            pista = it as Pista
+        }
 
     }
 
@@ -38,7 +46,7 @@ class BuscarContactoFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        root = inflater.inflate(R.layout.fragment_buscar_contacto_list, container, false)
+        root = inflater.inflate(R.layout.fragment_contactos_list, container, false)
         lista_ids = ArrayList()
         lista_contactos = ArrayList()
 
@@ -50,7 +58,7 @@ class BuscarContactoFragment : Fragment() {
 
         val id_usuario = FirebaseAuth.getInstance().currentUser?.uid
         val referencia_usuario = databaseReference.child(id_usuario!!)
-
+        Log.e("lista_id_buscar"," "+id.toString())
         referencia_usuario.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -61,6 +69,7 @@ class BuscarContactoFragment : Fragment() {
                     Log.e("lista_id_buscar"," "+id.toString())
                 }
                 ver_contactos(lista_ids)
+
 
 
             }
@@ -85,8 +94,8 @@ class BuscarContactoFragment : Fragment() {
     private fun ver_contactos(lista_id: ArrayList<String>) {
         for(id_lista in lista_id){
 
-            val query= database.getReference ("usuarios").startAt("p").endAt("p\uf8ff")
-            query.addValueEventListener(object : ValueEventListener {
+            var referencia = databaseReferenceUsuarios.child(id_lista.toString())
+            referencia.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     //public Contacto(String nickName, String fotoPerfil, String idUsuario) {
                     val nickname = snapshot.child("nickName").value.toString()
@@ -115,9 +124,10 @@ class BuscarContactoFragment : Fragment() {
                                     "lista_buscar",
                                     "tamaño_contactos " + lista_contactos.size
                                 )
+                                val fm= fragmentManager
                                 (root as RecyclerView).adapter =
                                     com.example.tenisclubdroid.ui.contactos.MyContactoRecyclerViewAdapter(
-                                        lista_contactos
+                                        lista_contactos, fm!!,pista
                                     )
                             }
                         }
@@ -135,59 +145,20 @@ class BuscarContactoFragment : Fragment() {
 
 
 
-        /*for (id_lista in lista_id) {
-            var refrencia = databaseReferenceUsuarios.child(id_lista.toString())
-            Log.e("lista_id", " " + id_lista.toString())
-            refrencia.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    //public Contacto(String nickName, String fotoPerfil, String idUsuario) {
-                    val nickname = snapshot.child("nickName").value.toString()
-                    val fotoPerfil = snapshot.child("fotoPerfil").value.toString()
-                    val idUsuario = snapshot.child("idUsuario").value.toString()
-                    val contacto = Contacto(nickname, fotoPerfil, idUsuario)
-                    añadir_contacto(contacto)
-
-                    if (lista_id.size == lista_contactos.size) {
-
-
-                        if (root is RecyclerView) {
-                            with(root) {
-                                (root as RecyclerView).layoutManager = when {
-                                    columnCount <= 1 -> androidx.recyclerview.widget.LinearLayoutManager(
-                                        context
-                                    )
-                                    else -> androidx.recyclerview.widget.GridLayoutManager(
-                                        context,
-                                        columnCount
-                                    )
-                                }
-
-
-                                android.util.Log.e(
-                                    "lista",
-                                    "tamaño_contactos " + lista_contactos.size
-                                )
-                                (root as RecyclerView).adapter =
-                                    com.example.tenisclubdroid.ui.contactos.MyUsuarioRecyclerViewAdapter(
-                                        lista_contactos
-                                    )
-                            }
-                        }
-                    }
-
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-
-
-            })
-        }*/
 
 
     }
 
+    companion object {
 
+        // TODO: Rename and change types and number of parameters
+        @JvmStatic
+        fun newInstance(pista: Pista) =
+            BuscarContactoFragment().apply {
+                arguments = Bundle().apply {
+                    putSerializable("pista", pista)
+                }
+            }
+    }
 
 }

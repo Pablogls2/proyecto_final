@@ -10,7 +10,7 @@
     android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/ivContactosImagen"
+        android:id="@+id/ivBuscarContactosImagen"
         android:layout_width="85dp"
         android:layout_height="62dp"
         android:layout_alignParentStart="false"
@@ -27,7 +27,7 @@
         android:contentDescription="Icon" />
 
     <TextView
-        android:id="@+id/tvContactosNickname"
+        android:id="@+id/tvBuscarContactosNickname"
         android:layout_width="223dp"
         android:layout_height="26dp"
         android:layout_alignParentTop="true"

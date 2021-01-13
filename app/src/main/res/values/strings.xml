@@ -55,4 +55,18 @@
     <string name="descripcion">Tu Descripcion</string>
     <string name="mensaje_home">Bienvenido a tu aplicacion para reservar pistas de tenis</string>
     <string name="EntrarTwitter">Entra con Twitter</string>
+    <string name="pistas">Pistas disponibles</string>
+    <string name="pista_extra">Extras:</string>
+    <string name="contrincante">Contrincante:</string>
+    <string name="continuar">Continuar</string>
+    <string name="inicio">Hora de inicio:</string>
+    <string name="final_hora">Hora final:</string>
+    <string name="precio">"Precio total: "</string>
+    <string name="metodo">Métodos de pago:</string>
+    <string name="pago">Visa/MasterCard</string>
+    <string name="tarjeta">Numero de tarjeta</string>
+    <string name="csv">csv</string>
+    <string name="fecha_validez">Fecha validez</string>
+    <string name="pagar">Pagar</string>
+    <string name="paypal">PayPal</string>
 </resources>

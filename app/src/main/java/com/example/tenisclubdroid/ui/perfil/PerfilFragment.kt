@@ -102,14 +102,9 @@ class PerfilFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_edit -> {
-                //para meter en un fragment info
-                /*val bundle = Bundle()
-                Log.e("usuario"," d" + usuario.nickName)
-                bundle.putSerializable("usuario",usuario)*/
 
                 val fm = fragmentManager
                 val edit_perfil = EditarPerfilFragment.newInstance(usuario)
-                //edit_perfil.arguments.apply { bundle }
 
                 val transaction = fm!!.beginTransaction()
                 transaction.replace(R.id.nav_host_fragment, edit_perfil)

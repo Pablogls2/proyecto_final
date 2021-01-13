@@ -31,10 +31,13 @@ class MyContactoRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        //cogemos el contacto
         val item = values[position]
+        //se carga en la lista la imagen y el nombre
         Picasso.get().load(item.fotoPerfil).transform(ImagenRedonda()).into(holder.ivImagen)
         holder.tvNickname.text = item.nickName
 
+        //cuando pulse en el contacto se mandará a la reserva la pista, el nombre del usuario y us id
         holder.relativeLayout.setOnClickListener(View.OnClickListener {
 
             val reserva = ReservarFragment.newInstance(pista,item.nickName,item.idUsuario)

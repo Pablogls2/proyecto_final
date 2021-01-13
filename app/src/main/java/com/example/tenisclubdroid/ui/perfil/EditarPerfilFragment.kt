@@ -46,8 +46,6 @@ class EditarPerfilFragment : Fragment() {
 
 
     lateinit var usuario: Usuario
-    lateinit var currentPhotoPath: String
-    lateinit var photoUri: Uri
     lateinit var root: View
 
     var fotoUri: Uri? = null
@@ -72,18 +70,19 @@ class EditarPerfilFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+
         root = inflater.inflate(R.layout.fragment_editar_perfil, container, false)
 
 
-        //para que el teclado no se vuelva loco
+        //para que el teclado funcione bien
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
-        //inicializamos
+        //inicializamos los objetos y cargamos los datos
         inicializar()
 
-        database =
-            FirebaseDatabase.getInstance("https://tenisclubdroid-default-rtdb.europe-west1.firebasedatabase.app/")
+        //para editar necesitaremos la base de datos, la referencia a los usuarios y para editar el nickname el de los nombres cogidos
+
+        database = FirebaseDatabase.getInstance("https://tenisclubdroid-default-rtdb.europe-west1.firebasedatabase.app/")
 
         databaseReference = database.reference.child("usuarios")
         nombresCogidos = database.reference.child("NombresCogidos")
@@ -91,7 +90,7 @@ class EditarPerfilFragment : Fragment() {
 
 
         btnEditarFoto.setOnClickListener(View.OnClickListener {
-
+            //mostramos el dialogo para elegir entre camara o galeria
             mostrarDialogoFoto()
 
 
@@ -108,15 +107,17 @@ class EditarPerfilFragment : Fragment() {
 
                 nombresCogidos.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        //buscamos que el nickname este repetido en la bbdd y en caso de que este repetido pero sea de el no habrá problema , pero si es de otro tendra que cambiarselo
                         Log.e("repetido", "" + dataSnapshot.child(nickname).key)
                         if (!dataSnapshot.hasChild(nickname) || dataSnapshot.child(nickname).value == usuario.idUsuario) {
-
+                            //si el nombre del usuario se ha cambiado se borra de la bbdd el antiguo para dejarlo libre
                             if (!etEditarNickName.text.toString()
                                     .equals(nombresCogidos.child(usuario.nickName))
                             ) {
 
                                 nombresCogidos.child(usuario.nickName).removeValue()
                             }
+                            //el nuevo se agrega a la bbdd de los nombres cogidos y se llama al metodo para resubir el usuario
                             nombresCogidos.child(nickname).setValue(usuario.idUsuario)
                             subirUsuario()
                         } else {
@@ -179,8 +180,7 @@ class EditarPerfilFragment : Fragment() {
     private fun tomarFotoCamara() {
         val value = ContentValues()
         value.put(MediaStore.Images.Media.TITLE, "Imagen")
-        fotoUri =
-            activity?.contentResolver?.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, value)!!
+        fotoUri = activity?.contentResolver?.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, value)!!
         val camaraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         camaraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fotoUri)
         startActivityForResult(camaraIntent, CAMARA)
@@ -199,11 +199,6 @@ class EditarPerfilFragment : Fragment() {
                 // Obtenemos su URI con su dirección temporal
                 fotoUri = data.data
                 try {
-                    // Obtenemos el bitmap de su almacenamiento externo
-                    val bitmap = MediaStore.Images.Media.getBitmap(
-                        requireActivity().applicationContext.contentResolver,
-                        fotoUri
-                    )
                     Picasso.get().load(fotoUri).rotate(90F) .transform(ImagenRedonda()).into(ivPerfilFoto)
                 } catch (e: IOException) {
                     e.printStackTrace()
@@ -241,12 +236,15 @@ class EditarPerfilFragment : Fragment() {
     }
 
     private fun subirUsuario() {
+        //si la foto de perfil no se ha cambiado se le asigna la que tenia antes
         if (fotoUri == null) {
+            //se llama al metodo de guardar el usuario con la imagen antigua
             guardar(usuario.fotoPerfil)
         } else {
+            //guardamos en el servicio de Firebase Storage la ruta de la foto de perfil nueva
             val filename = UUID.randomUUID().toString()
             val ref = FirebaseStorage.getInstance().getReference("/imagenes/$filename")
-
+            //se sube la imagen y se llama al metodo para guardar el usuario con la url donde la ha creado en el Storage
             ref.putFile(fotoUri!!).addOnSuccessListener {
                 ref.downloadUrl.addOnSuccessListener {
                     guardar(it.toString())
@@ -257,6 +255,7 @@ class EditarPerfilFragment : Fragment() {
     }
 
     private fun guardar(fotoUrl: String) {
+        //coge los datos del usuario y lo crea
         val fUser: FirebaseUser = FirebaseAuth.getInstance().currentUser!!
         val currentUserDb = databaseReference.child(fUser.uid)
         //se crea el usuario con los datos
@@ -271,7 +270,7 @@ class EditarPerfilFragment : Fragment() {
         currentUserDb.setValue(user)
         Toast.makeText(activity?.baseContext, "Perfil Actualizado", Toast.LENGTH_SHORT).show()
 
-
+        //se vuelve al perfil
         val fm = fragmentManager
         val perfil = PerfilFragment()
         val transaction = fm!!.beginTransaction()

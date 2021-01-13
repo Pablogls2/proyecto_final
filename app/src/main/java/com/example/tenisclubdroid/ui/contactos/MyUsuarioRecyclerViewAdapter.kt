@@ -38,10 +38,11 @@ class MyUsuarioRecyclerViewAdapter(
         val descripcion= item.descripcion
 
 
-        // Cargamos los eventos de los componentes que quedamos
-        holder.relativeLayout.setOnClickListener(View.OnClickListener { //cuando pinche se ira al fragment de detalles para ver el juego
-            val contacto = Contacto(nickname,foto,"",descripcion)
+        //cuando pinche se ira al fragment de detalles para ver contacto
+        holder.relativeLayout.setOnClickListener(View.OnClickListener {
 
+            val contacto = Contacto(nickname,foto,"",descripcion)
+            //se le pasa el contacto
             val detalle = DetalleContactoFragment.newInstance(contacto)
 
             val transaction = fm!!.beginTransaction()

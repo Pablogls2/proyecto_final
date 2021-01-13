@@ -60,36 +60,41 @@ class ReservarFechaFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+
         root = inflater.inflate(R.layout.fragment_reservar_fecha, container, false)
         calendarioReserva = root.findViewById<CalendarView>(R.id.calendarReservarFecha)
         etTimeInicio = root.findViewById<TextView>(R.id.tvReservarHoraInicial)
         etTimeFinal = root.findViewById<TextView>(R.id.tvReservarHoraFinal)
         val btnReservaFechaContinuar = root.findViewById<Button>(R.id.btnReservarFechaContinuar)
         fecha = ""
+
+        //como vamos a comprobar que no existan reservas con la misma fecha e intervalo de horas deberemos comprobarlo
+        //para ello necesitaremos 3 listas
         pistas_cogidas= ArrayList()
         fechas_reservadas= ArrayList()
         lista_reservas= ArrayList()
+
         database =
             FirebaseDatabase.getInstance("https://tenisclubdroid-default-rtdb.europe-west1.firebasedatabase.app/")
 
 
         databaseReference = database.reference.child("reservas")
 
-
+        //listener para elegir una fecha mediante un Calendar view, una vez la elija la guardará en una variable global para acceder a ella mas tarde
         calendarioReserva.setOnDateChangeListener(CalendarView.OnDateChangeListener { _, year, month, dayOfMonth ->
 
             fecha = dayOfMonth.toString() + "-" + (month + 1) + "-" + year
             Log.e("fecha", fecha.length.toString())
         })
 
-
+        //activamos los listener de los TimePickers para elegir las horas
         etTimeInicio.setOnClickListener { showTimePickerDialog() }
         etTimeFinal.setOnClickListener { showTimePickerDialog2() }
 
-
+        //listener para continuar cuando haya elegido una fecha y hora
         btnReservaFechaContinuar.setOnClickListener(View.OnClickListener {
 
+            //cogemos las horas
             hora_inicio = etTimeInicio.text.toString()
             hora_final = etTimeFinal.text.toString()
 
@@ -100,7 +105,7 @@ class ReservarFechaFragment : Fragment() {
                 //comprobamos que ha introducido la hora de inicio y final de la reserva
                 if (!hora_inicio.equals("Hora de inicio:") && !hora_final.equals("Hora final:")) {
 
-                    //comprobamos que cumpla el horario (para no hacer una reserva a las 2 de la madrugada
+                    //comprobamos que cumpla el horario (para no hacer una reserva a las 2 de la madrugada)
                     if (!horas_validas(hora_inicio, hora_final)) {
                         Toast.makeText(
                             activity?.baseContext,
@@ -126,24 +131,13 @@ class ReservarFechaFragment : Fragment() {
                                 //Log.e("fecha_nueva", " " + fecha)
                             }
 
-                            //ahora vamos a comprobar que no este la pista cogida ya
-                            /////
-                            /////
                             //ponemos la fecha junto con las horas
                             fecha_elegida = fecha + "/" + hora_inicio + "-" + hora_final
                             //se llama al metodo de comprobar que no haya una reserva previa para la misma pista en el mismo intervalo de horas
+                            //si no esta cogida continuará al pago electronico
                             reservas_cogidas()
 
 
-                           /* reserva.fecha = fecha_elegida
-
-                            val reservar_pago = ReservarPagoFragment.newInstance(reserva)
-
-                            val fm = fragmentManager
-                            val transaction = fm!!.beginTransaction()
-                            transaction.replace(R.id.nav_host_fragment, reservar_pago)
-                            transaction.addToBackStack(null)
-                            transaction.commit()*/
 
 
                         }
@@ -183,10 +177,12 @@ class ReservarFechaFragment : Fragment() {
                 }
             }
     }
-
+    /*
+    * Metodo para comprobar que las horas sean validas y seguir un horario
+    * */
     private fun horas_validas(hora_inicio: String, hora_final: String): Boolean {
         var hora_valida = false
-
+        //tenemos un boolean para cada hora, no puede ser antes de las 10 ni despues de las 7 p.m
         val hora_inicio_valida =
             (hora_inicio.startsWith("1:") || hora_inicio.startsWith("2:") || hora_inicio.startsWith(
                 "3"
@@ -219,12 +215,14 @@ class ReservarFechaFragment : Fragment() {
     }
 
     private fun reservas_cogidas (){
+        //nos traemos todas las reservas y las guardamos en una lista
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.children.forEach {
                     val id = it.key
                     lista_reservas.add(id.toString())
                 }
+                //se la pasamos a otro metodo para seguir trabajandola
                 fechas_pistas(lista_reservas)
 
             }
@@ -240,6 +238,7 @@ class ReservarFechaFragment : Fragment() {
     }
 
     private fun fechas_pistas(lista_id : ArrayList<String>){
+        //ahora va reserva por reserva cogiendo su fecha y la pista
         for(idLista in lista_id){
             var referencia = databaseReference.child(idLista.toString())
             referencia
@@ -255,6 +254,7 @@ class ReservarFechaFragment : Fragment() {
                         fechas_reservadas.add( fechaa)
                         pistas_cogidas.add(pista)
 
+                        //cuando hallamos recogido todos los datos iremos al metodo para comprovar la validez de la fecha
                         if(lista_id.size== fechas_reservadas.size){
                             fecha_valida(fechas_reservadas,pistas_cogidas)
                         }
@@ -274,14 +274,16 @@ class ReservarFechaFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun fecha_valida(fechas_reservada: ArrayList<String>, pistas_cogida: ArrayList<String>) {
         val i=0
-
+        //recorremos las fechas reservadas y las pistas
         for (fe in fechas_reservada){
-
+            //primero se comprueba si la pista es la misma, en caso contrario no hay por que comprobar mas cosas ya que es distinta
             if(pistas_cogida.get(i).equals(reserva.pista.nombre)){
 
+                    //si es la misma pista cogeremos la fecha y le quitaremos las horas
                     val fecha_reserva = fechas_reservada.get(i).substring(0,10)
                     Log.e("fecha_mini"," "+fecha_reserva)
-                    //se comprueba que la fecha de la pista no este , puesto que si no es la misma no hay por que comparar mas
+
+                    //se comprueba que la fecha de la pista no sea la  misma , puesto que si no es la misma no hay por que comparar mas
                     if(fecha_reserva.equals(fecha)){
                         val h1=fechas_reservada.get(i).substring(11,16)
                         val h2= fechas_reservada.get(i).substring(17,fechas_reservada.get(i).length)
@@ -360,9 +362,11 @@ class ReservarFechaFragment : Fragment() {
     }
 
     private fun guardarFecha(){
+        //ageregamos a nuestra reserva (que trajimos) y le agregamos la fecha elegida
         Log.e("hora_bien","hora bien ")
         reserva.fecha = fecha_elegida
-       // Toast.makeText(activity?.baseContext, "Fecha elegida:  "+fecha_elegida, Toast.LENGTH_SHORT).show()
+
+        // nos vamos al ultimo Fragment de la reserva pasandole la reserva
         val reservar_pago = ReservarPagoFragment.newInstance(reserva)
 
         val fm = fragmentManager

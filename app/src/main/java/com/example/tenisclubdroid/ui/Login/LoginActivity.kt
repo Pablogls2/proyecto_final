@@ -11,7 +11,6 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.tenisclubdroid.Comunicacion
 import com.example.tenisclubdroid.MainActivity
 import com.example.tenisclubdroid.R
 import com.example.tenisclubdroid.ui.clases.Usuario
@@ -51,7 +50,9 @@ class LoginActivity : AppCompatActivity() {
         progressBarLogin= this.findViewById<ProgressBar>(R.id.progressBarLogin)
         auth = FirebaseAuth.getInstance()
 
+        //para cargar la sesion si el usuario la ha iniciado previamente
         cargarSesion()
+        //se piden los permisos
         pedirMultiplesPermisos()
 
         btnLogin.setOnClickListener(View.OnClickListener {
@@ -79,14 +80,14 @@ class LoginActivity : AppCompatActivity() {
                         prefs.apply()
 
                         progressBarLogin.setVisibility(View.GONE)
+                        //pasamos al home de la aplicacion
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                         finish()
                     } else {
-                        //if(it.exception==null){
-                            Toast.makeText(this, "Datos incorrectos!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Datos incorrectos!", Toast.LENGTH_SHORT).show()
                         progressBarLogin.setVisibility(View.GONE)
-                        //}
+
 
                     }
                 }.addOnFailureListener {
@@ -154,10 +155,10 @@ class LoginActivity : AppCompatActivity() {
                             if (it.isSuccessful) {
                                 //se recoge el usuario
                                 val user = FirebaseAuth.getInstance().currentUser
-                                //se cogen sus datos
+                                //para que su nombre tambien sea unico en nuestra app le añadimos un numero aleatorio
                                 val random = Random()
-
                                 val numerito = random.nextInt(0..100000)
+
                                 val nickname = user?.displayName.toString()+ numerito.toString()
                                 val id = user?.uid.toString()
                                 val foto = user?.photoUrl.toString()

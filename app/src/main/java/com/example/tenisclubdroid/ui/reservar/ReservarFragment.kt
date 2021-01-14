@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import com.example.tenisclubdroid.R
 import com.example.tenisclubdroid.ui.clases.Pista
@@ -223,43 +224,27 @@ class ReservarFragment : Fragment() {
                 id: Long
             ) {
 
-                //se hace un switch dependiendo de lo seleccionado
-                val seleccion = spinner.getSelectedItem() as String
+                //depende del indice seleccionado será una pista u otra
+                var id_seleccion = position
 
-                //segun sea el nombre de la pista se cargaran unos datos u otros
-                when (seleccion) {
-                    lista_nombres.get(1) -> {
-                        tvReservarExtra1.setText("Limpieza: " + " " + lista_pistas.get(0).extras.get(0).toString() + " €"
-                        )
-                        tvReservarExtra2.setText(
-                            "Luces: " + " " + lista_pistas.get(0).extras.get(1).toString() + " €"
-                        )
-                        Picasso.get().load(lista_pistas.get(0).foto).into(ivReservarFoto)
-                        pista_elegida = Pista(
-                            lista_pistas.get(0).foto,
-                            lista_pistas.get(0).nombre,
-                            lista_pistas.get(0).precio,
-                            lista_pistas.get(0).extras
-                        )
-
-
-                    }
-                    lista_nombres.get(2) -> {
-                        tvReservarExtra1.setText("Limpieza: " + " " + lista_pistas.get(1).extras.get(0).toString() + " €"
-                        )
-                        tvReservarExtra2.setText(
-                            "Luces" + " " + lista_pistas.get(1).extras.get(1).toString() + " €"
-                        )
-                        Picasso.get().load(lista_pistas.get(1).foto).into(ivReservarFoto)
-                        pista_elegida = Pista(
-                            lista_pistas.get(1).foto,
-                            lista_pistas.get(1).nombre,
-                            lista_pistas.get(1).precio,
-                            lista_pistas.get(1).extras
-                        )
-
-                    }
+                if(id_seleccion!=0){
+                    //se le resta 1 porque la lista de pistas empieza en 0 y la de nombres del spinner en 1
+                    id_seleccion= id_seleccion -1
+                    Log.e("spinner",""+id_seleccion)
+                    tvReservarExtra1.setText("Limpieza: " + " " + lista_pistas.get(id_seleccion).extras.get(0).toString() + " €"
+                    )
+                    tvReservarExtra2.setText(
+                        "Luces: " + " " + lista_pistas.get(id_seleccion).extras.get(1).toString() + " €"
+                    )
+                    Picasso.get().load(lista_pistas.get(id_seleccion).foto).into(ivReservarFoto)
+                    pista_elegida = Pista(
+                        lista_pistas.get(id_seleccion).foto,
+                        lista_pistas.get(id_seleccion).nombre,
+                        lista_pistas.get(id_seleccion).precio,
+                        lista_pistas.get(id_seleccion).extras
+                    )
                 }
+
 
             }
 

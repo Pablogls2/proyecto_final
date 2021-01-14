@@ -3,7 +3,7 @@ Hola!! Estas en el repositorio de la nueva aplicacion para reservas de pistas de
 
 ##Contenido:
 <br />
-Wiki del proyecto: [wiki]
+Wiki del proyecto: [https://github.com/Pablogls2/proyecto_final/wiki]
 <br />
 Manual de usuario: [guia]
 

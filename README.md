@@ -2,7 +2,7 @@
 Hola!! Estas en el repositorio de la nueva aplicacion para reservas de pistas de tenis  # TenisClubDroid
 
 ## Contenido:
-<br />
+
 -Wiki del proyecto: [wiki]
 <br />
 -Manual de usuario: [ponerla cuando esté]

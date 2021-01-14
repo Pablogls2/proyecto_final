@@ -1,5 +1,5 @@
 ## TenisClubDroid
-Hola!! Estas en el repositorio de la nueva aplicacion para reservas de pistas de tenis  ##TenisClubDroid
+Hola!! Estas en el repositorio de la nueva aplicacion para reservas de pistas de tenis 
 
 ## Contenido:
 

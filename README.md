@@ -3,9 +3,11 @@ Hola!! Estas en el repositorio de la nueva aplicacion para reservas de pistas de
 
 ##Contenido:
 <br />
-Wiki del proyecto: [https://github.com/Pablogls2/proyecto_final/wiki]
+-Wiki del proyecto: [wiki]
 <br />
-Manual de usuario: [guia]
+-Manual de usuario: [ponerla cuando esté]
+<br/>
+-Codigo fuente: [codigo fuente]
 
 ## Workflow del proyecto 
 
@@ -19,3 +21,7 @@ Manual de usuario: [guia]
 [<img align="left" alt="Firebase" width="26px" src="https://www.gstatic.com/devrel-devsite/prod/veaa02889f0c07424beaa31d9bac1e874b6464e7ed7987fde4c94a59ace9487fa/firebase/images/touchicon-180.png" />][firebase]
 <img align="left" alt="Android Studio" width="26px" src="https://upload.wikimedia.org/wikipedia/commons/3/34/Android_Studio_icon.svg" />
 <br />
+
+
+[wiki]: https://github.com/Pablogls2/proyecto_final/wiki
+[codigo fuente]:https://github.com/Pablogls2/proyecto_final/tree/master

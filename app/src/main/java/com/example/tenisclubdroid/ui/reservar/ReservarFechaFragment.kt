@@ -13,6 +13,7 @@ import com.example.tenisclubdroid.R
 import com.example.tenisclubdroid.ui.clases.Reserva
 import com.example.tenisclubdroid.ui.clases.TimePickerFragment
 import com.google.firebase.database.*
+import java.lang.Exception
 import java.time.LocalTime
 import kotlin.collections.ArrayList
 
@@ -222,8 +223,12 @@ class ReservarFechaFragment : Fragment() {
                     val id = it.key
                     lista_reservas.add(id.toString())
                 }
+                if(lista_reservas.isEmpty()){
+                    guardarFecha()
+                }
                 //se la pasamos a otro metodo para seguir trabajandola
                 fechas_pistas(lista_reservas)
+
 
             }
 
@@ -245,11 +250,11 @@ class ReservarFechaFragment : Fragment() {
                 .addValueEventListener(object : ValueEventListener {
                     @RequiresApi(Build.VERSION_CODES.O)
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        //Log.e(" fechas_de_reservas", " " + snapshot.child("fecha").value.toString())
-                        //Log.e(" fecha-PISTAS", " " + snapshot.child("pista").child("nombre").value.toString())
+                        Log.e(" fechas_de_reservas", " " + snapshot.child("fecha").value.toString())
+                        Log.e(" fecha-PISTAS", " " + snapshot.child("pista").child("nombre").value.toString())
                         val fechaa =snapshot.child("fecha").value.toString()
                         val pista=snapshot.child("pista").child("nombre").value.toString()
-                        //Log.e("fecha",fechaa+pista)
+                        Log.e("fecha",fechaa+pista)
 
                         fechas_reservadas.add( fechaa)
                         pistas_cogidas.add(pista)
@@ -268,19 +273,23 @@ class ReservarFechaFragment : Fragment() {
 
         }
 
+
     }
 
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun fecha_valida(fechas_reservada: ArrayList<String>, pistas_cogida: ArrayList<String>) {
-        val i=0
+        var i=0
+        var lista_fechas_ok= ArrayList<Boolean>()
+
         //recorremos las fechas reservadas y las pistas
         for (fe in fechas_reservada){
+            val fecha_reserva = fechas_reservada.get(i).substring(0,10)
             //primero se comprueba si la pista es la misma, en caso contrario no hay por que comprobar mas cosas ya que es distinta
-            if(pistas_cogida.get(i).equals(reserva.pista.nombre)){
+            if(pistas_cogida.get(i).equals(reserva.pista.nombre) && fecha_reserva.equals(fecha)){
 
                     //si es la misma pista cogeremos la fecha y le quitaremos las horas
-                    val fecha_reserva = fechas_reservada.get(i).substring(0,10)
+
                     Log.e("fecha_mini"," "+fecha_reserva)
 
                     //se comprueba que la fecha de la pista no sea la  misma , puesto que si no es la misma no hay por que comparar mas
@@ -298,7 +307,8 @@ class ReservarFechaFragment : Fragment() {
 
                         //para cuando el usuario meta 15:00 y 19:00
                         if(hora_inicio.equals(h1) || (hora_final.equals(h2))) {
-                            toastHoras()
+                            //toastHoras()
+                            lista_fechas_ok.add(false)
                         }else{
                             //para trabajar con las horas las pasamos al tipo de objeto de LocalTime
                             val horaInicioBBDDLocal = LocalTime.parse(h1)
@@ -309,31 +319,38 @@ class ReservarFechaFragment : Fragment() {
 
                             //cuando meta 14:00 y 16:00
                             if(horaInicio.isBefore(horaInicioBBDDLocal) && horaFinal.isAfter(horaInicioBBDDLocal) ){
-                                toastHoras()
+                                //toastHoras()
+                                lista_fechas_ok.add(false)
                             }else{
                                 //cuando meta 14:00 y 20:00
                                 if(horaInicio.isBefore(horaFinalBBDDLocal) && horaFinal.isAfter(horaFinalBBDDLocal)){
-                                    toastHoras()
+                                    //toastHoras()
+                                    lista_fechas_ok.add(false)
                                 }else{
                                     //cuando meta 15:00 y 17:00
                                     if(hora_inicio.equals(h1) && horaFinal.isBefore(horaFinalBBDDLocal)){
-                                        toastHoras()
+                                        //toastHoras()
+                                        lista_fechas_ok.add(false)
                                     }else{
                                         //cuando meta 14:00 y 19:00
                                         if(horaInicio.isBefore(horaFinalBBDDLocal) && hora_final.equals(h2)){
-                                            toastHoras()
+                                            //toastHoras()
+                                            lista_fechas_ok.add(false)
                                         }else{
                                             //cuando meta 17:00 y 18:00
                                             if(horaInicio.isAfter(horaInicioBBDDLocal) && horaFinal.isBefore(horaFinalBBDDLocal)){
-                                                toastHoras()
+                                                //toastHoras()
+                                                lista_fechas_ok.add(false)
                                             }else {
                                                 //cuando meta 17:00 y 19:00
                                                 if(horaInicio.isAfter(horaInicioBBDDLocal) && hora_final.equals(h2)){
-                                                    toastHoras()
+                                                   // toastHoras()
+                                                    lista_fechas_ok.add(false)
                                                 }else{
+                                                    lista_fechas_ok.add(true)
                                                     //cuando se compruebe se pasa a la parte del pago dandole el objeto de Reserva con todos los datos acumulados
                                                     fecha_cogida = false
-                                                    guardarFecha()
+                                                    //guardarFecha()
                                                 }
 
                                             }
@@ -345,16 +362,34 @@ class ReservarFechaFragment : Fragment() {
                         }
 
                     }else{
-                        guardarFecha()
+                        lista_fechas_ok.add(true)
                     }
 
 
             }else{
-                guardarFecha()
+            lista_fechas_ok.add(true)
             }
 
-
+            i++
         }
+        //si la hora y fecha está ya cogida en alguno de los ifs añadira un false a la lista de comprobacion y con que hallé solo un false no continuará
+        var oki=0
+        for( ok in lista_fechas_ok){
+            Log.e("oki",""+ ok.toString())
+            if(ok==false){
+                oki++
+            }
+        }
+        Log.e("oki","  oki: "+oki.toString())
+        if(oki>0){
+            oki=0
+            toastHoras()
+            lista_fechas_ok.clear()
+
+        }else{
+            guardarFecha()
+        }
+
 
     }
     private fun toastHoras(){
@@ -363,17 +398,21 @@ class ReservarFechaFragment : Fragment() {
 
     private fun guardarFecha(){
         //ageregamos a nuestra reserva (que trajimos) y le agregamos la fecha elegida
-        Log.e("hora_bien","hora bien ")
-        reserva.fecha = fecha_elegida
+        try {
+            Log.e("hora_bien", "hora bien ")
+            reserva.fecha = fecha_elegida
 
-        // nos vamos al ultimo Fragment de la reserva pasandole la reserva
-        val reservar_pago = ReservarPagoFragment.newInstance(reserva)
+            // nos vamos al ultimo Fragment de la reserva pasandole la reserva
+            val reservar_pago = ReservarPagoFragment.newInstance(reserva)
 
-        val fm = fragmentManager
-        val transaction = fm!!.beginTransaction()
-        transaction.replace(R.id.nav_host_fragment, reservar_pago)
-        transaction.addToBackStack(null)
-        transaction.commit()
+            val fm = fragmentManager
+            val transaction = fm!!.beginTransaction()
+            transaction.replace(R.id.nav_host_fragment, reservar_pago)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }catch (e : Exception){
+
+        }
     }
 
     private fun showTimePickerDialog() {

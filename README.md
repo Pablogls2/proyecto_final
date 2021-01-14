@@ -5,7 +5,7 @@ Hola!! Estas en el repositorio de la nueva aplicacion para reservas de pistas de
 
 -Wiki del proyecto: [wiki]
 <br />
--Manual de usuario: [ponerla cuando esté]
+-Manual de usuario: [manual]
 <br/>
 -Codigo fuente: [codigo fuente]
 
@@ -28,3 +28,4 @@ Hola!! Estas en el repositorio de la nueva aplicacion para reservas de pistas de
 [codigo fuente]:https://github.com/Pablogls2/proyecto_final/tree/master
 [kotlin]: https://developer.android.com/kotlin?hl=es
 [firebase]: https://firebase.google.com/
+[manual]: https://pablogls2.github.io/proyecto_final/

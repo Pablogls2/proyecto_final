@@ -9,7 +9,7 @@ Hola!! Estas en el repositorio de la nueva aplicacion para reservas de pistas de
 <br/>
 -Codigo fuente: [codigo fuente]
 
-## Workflow del proyecto 
+## GitFlow del proyecto 
 
 <br />
 <img align="left" alt="gittree" width="1000px" src="https://github.com/Pablogls2/proyecto_final/blob/main/documentacion/gitFlow/arbol_gitflow.PNG" />
@@ -25,3 +25,5 @@ Hola!! Estas en el repositorio de la nueva aplicacion para reservas de pistas de
 
 [wiki]: https://github.com/Pablogls2/proyecto_final/wiki
 [codigo fuente]:https://github.com/Pablogls2/proyecto_final/tree/master
+[kotlin]: https://developer.android.com/kotlin?hl=es
+[firebase]: https://firebase.google.com/
